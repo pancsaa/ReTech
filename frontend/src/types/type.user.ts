@@ -26,13 +26,7 @@ export interface Product {
   price_recoins?: number;
   status: 'active' | 'sold'|string;
   upload_date?: string;                
-  images?: ProductImage[];
-}
-
-export interface ProductImage {
-  image_id: number | string;
-  product_id: number | string;
-  image_url: string;            
+  images?: string;
 }
 
 export interface Transaction {
@@ -47,15 +41,6 @@ export interface Transaction {
   title?: string; 
 }
 
-export interface RecoinHistory {
-  history_id: number | string;
-  user_id: number | string;
-  transaction_id?: number | string | null;
-  change_amount: number;
-  reason: string;  
-  date: string;
-}
-
 export interface Recycle {
   recycle_id: number | string;
   user_id: number | string;
@@ -65,7 +50,7 @@ export interface Recycle {
   date: string;
 }
 
-export type UserProfile = Omit<User, 'password'>;  // jelszó nélküli verzió
+export type UserProfile = Omit<User, 'password'>; 
 
 export interface UserWithStats extends UserProfile {
   productCount: number;
