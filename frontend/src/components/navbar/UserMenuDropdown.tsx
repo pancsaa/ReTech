@@ -1,8 +1,12 @@
+// src/components/navbar/UserMenuDropdown.tsx
+
+import React from 'react';
+
 interface Product {
   product_id: number;
   title: string;
   status: string;
-  price_recoint: number;
+  price_recoint: number;  // vagy price_recoins, attól függően, mit használsz valójában
 }
 
 interface UserMenuDropdownProps {
@@ -37,6 +41,7 @@ export default function UserMenuDropdown({
     <div
       className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden z-50"
     >
+      {/* Fejléc: profil infó */}
       <div className="p-5 bg-gradient-to-r from-green-50 to-blue-50 border-b">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-inner">
@@ -49,6 +54,7 @@ export default function UserMenuDropdown({
         </div>
       </div>
 
+      {/* ReCoin egyenleg */}
       <div className="p-4 border-b">
         <div className="flex justify-between items-center">
           <div>
@@ -61,14 +67,20 @@ export default function UserMenuDropdown({
         </div>
       </div>
 
+      {/* Saját termékek lista */}
       <div className="p-4 border-b">
         <h4 className="font-semibold text-gray-700 mb-3">Saját termékeim</h4>
         <div className="space-y-3 max-h-48 overflow-y-auto">
           {myProducts.length === 0 ? (
-            <p className="text-sm text-gray-500 text-center py-4">Még nincs terméked</p>
+            <p className="text-sm text-gray-500 text-center py-4">
+              Még nincs terméked
+            </p>
           ) : (
             myProducts.map((product) => (
-              <div key={product.product_id} className="flex justify-between items-center text-sm">
+              <div
+                key={product.product_id}
+                className="flex justify-between items-center text-sm"
+              >
                 <span className="truncate pr-2">{product.title}</span>
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -85,13 +97,19 @@ export default function UserMenuDropdown({
         </div>
       </div>
 
+      {/* Kijelentkezés gomb */}
       <div className="p-4">
         <button
           onClick={onLogout}
           className="w-full py-3 bg-red-50 hover:bg-red-100 text-red-700 font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+            />
           </svg>
           Kijelentkezés
         </button>

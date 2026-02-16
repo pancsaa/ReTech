@@ -7,12 +7,9 @@ export interface User {
   recoins_balance: number;
   recoins_balance_date?: string;  
   register_date: string;      
-  products?: Product[];        
-  transactionsAsBuyer?: Transaction[];
-  transactionsAsSeller?: Transaction[];
-  recoinsHistory?: RecoinHistory[];
-  recycleEntries?: Recycle[];
+  products?: Product[];       
 }
+
 export interface Product {
   product_id: number | string;
   seller_id: number | string;         // FK → seller
@@ -24,7 +21,7 @@ export interface Product {
   model?: string;
   price: number;
   price_recoins?: number;
-  status: 'active' | 'sold'|string;
+  status: 'active' | 'sold' | string;
   upload_date?: string;                
   images?: string;
 }
@@ -37,7 +34,7 @@ export interface Transaction {
   amount: number; 
   recoins_amount?: number; 
   transaction_date: string;
-  type: 'purchase' |'refund' | string;
+  type: 'purchase' | 'refund' | string;
   title?: string; 
 }
 
