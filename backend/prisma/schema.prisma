@@ -23,6 +23,12 @@ enum ProductStatus {
   SOLD
 }
 
+enum RecycleStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User{
   id  Int @id @default(autoincrement())
   username  String
@@ -63,6 +69,7 @@ model Recycle {
   product_type  String
   condition String
   recoin_reward Int
+  status RecycleStatus @default(PENDING)
   date  DateTime  @default(now())
 }
 
