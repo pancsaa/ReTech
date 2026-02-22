@@ -16,7 +16,7 @@ export class AuthController {
     @UseInterceptors(
         FileInterceptor('image',{
             storage: diskStorage({
-                destination:'./profilePictures',
+                destination:'./uploads/profilePictures',
                 filename: (req, file, cb)=>{
                     const safe=createValidName(file.originalname)
                     cb(null, `${randomUUID()}-${safe}`)
