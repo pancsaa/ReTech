@@ -1,21 +1,15 @@
-import {
-  BadRequestException,
-  ConflictException,
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRecycleDto } from './dto/recycles.dto';
-import { RecycleStatus } from '../../generated/prisma/enums';
+import { calculateReward } from './reward.util';
 
 @Injectable()
 export class RecyclesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // USER: létrehoz egy recycle kérést -> PENDING, reward rögzítve, coin még NEM jár
-  async create(userId: number, dto: CreateRecycleDto) {
-    const reward = 100; // fix jutalom
+  //pending
+  async create(dto: CreateRecycleDto, userId: number) {
+    const reward = calculateReward(dto.product_type, dto.condition);
 
     return this.prisma.recycle.create({
       data: {
@@ -23,140 +17,94 @@ export class RecyclesService {
         product_type: dto.product_type,
         condition: dto.condition,
         recoin_reward: reward,
-        status: RecycleStatus.PENDING,
+        status: 'PENDING',
       },
       select: {
         id: true,
+        status: true,
         product_type: true,
         condition: true,
         recoin_reward: true,
-        status: true,
         date: true,
       },
     });
   }
 
-  // USER: saját recycle listája
+  //saját lista
   async myRecycles(userId: number) {
     return this.prisma.recycle.findMany({
       where: { user_id: userId },
-      orderBy: { date: 'desc' as const },
+      orderBy: { date: 'desc' },
       select: {
         id: true,
+        status: true,
         product_type: true,
         condition: true,
         recoin_reward: true,
-        status: true,
         date: true,
       },
     });
   }
 
-  // USER: egy saját recycle lekérése (owner check)
-  async findOne(userId: number, id: number) {
-    const rec = await this.prisma.recycle.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        user_id: true,
-        product_type: true,
-        condition: true,
-        recoin_reward: true,
-        status: true,
-        date: true,
-      },
-    });
-
-    if (!rec) throw new NotFoundException('Recycle not found');
-    if (rec.user_id !== userId) throw new ForbiddenException('Not your recycle request');
-
-    const { user_id, ...rest } = rec;
-    return rest;
-  }
-
-  // ADMIN: pending recycle-ok listája (ellenőrzésre)
-  async pendingList() {
+  async list(status: 'PENDING' | 'APPROVED' | 'REJECTED') {
     return this.prisma.recycle.findMany({
-      where: { status: RecycleStatus.PENDING },
-      orderBy: { date: 'asc' as const },
-      select: {
-        id: true,
-        product_type: true,
-        condition: true,
-        recoin_reward: true,
-        status: true,
-        date: true,
-        user: { select: { id: true, email: true, username: true } },
+      where: { status },
+      orderBy: { date: 'asc' },
+      include: {
+        user: { select: { id: true, username: true, email: true, recoin_balance: true } },
       },
     });
   }
 
-  // ADMIN: státusz váltás
-  // - PENDING -> APPROVED: coin jóváírás + státusz update (tranzakcióban)
-  // - PENDING -> REJECTED: csak státusz update
-  // - APPROVED/REJECTED már nem módosítható (hogy ne legyen duplán jóváírva)
-  async updateStatus(recycleId: number, status: RecycleStatus) {
-    if (status === RecycleStatus.PENDING) {
-      throw new BadRequestException('Cannot set status back to PENDING');
-    }
-
+  async approve(recycleId: number) {
     return this.prisma.$transaction(async (tx) => {
       const rec = await tx.recycle.findUnique({
         where: { id: recycleId },
-        select: { id: true, user_id: true, recoin_reward: true, status: true },
+        select: { id: true, status: true, user_id: true, recoin_reward: true },
       });
 
       if (!rec) throw new NotFoundException('Recycle not found');
-
-      if (rec.status !== RecycleStatus.PENDING) {
-        throw new ConflictException('Recycle request already processed');
+      if (rec.status !== 'PENDING') {
+        throw new BadRequestException('Ez a kérelem már nem PENDING (már kezelték).');
       }
 
-      const updated = await tx.recycle.updateMany({
-        where: { id: recycleId, status: RecycleStatus.PENDING },
-        data: { status },
-      });
-
-      if (updated.count !== 1) {
-        throw new ConflictException('Recycle request was processed by someone else');
-      }
-
-      //approve -> coin jóváírás
-      if (status === RecycleStatus.APPROVED) {
-        await tx.user.update({
-          where: { id: rec.user_id },
-          data: { recoin_balance: { increment: rec.recoin_reward } },
-        });
-      }
-
-      return tx.recycle.findUnique({
+      // 1) recycle státusz approved
+      await tx.recycle.update({
         where: { id: recycleId },
-        select: {
-          id: true,
-          product_type: true,
-          condition: true,
-          recoin_reward: true,
-          status: true,
-          date: true,
-          user: { select: { id: true, email: true, username: true } },
-        },
+        data: { status: 'APPROVED' },
       });
+
+      // 2) user balance +reward
+      const updatedUser = await tx.user.update({
+        where: { id: rec.user_id },
+        data: { recoin_balance: { increment: rec.recoin_reward } },
+        select: { id: true, username: true, recoin_balance: true },
+      });
+
+      return {
+        ok: true,
+        recycleId: rec.id,
+        rewarded: rec.recoin_reward,
+        user: updatedUser,
+      };
     });
   }
 
-  // (opcionális) ADMIN: összes recycle listája
-  async listAll() {
-    return this.prisma.recycle.findMany({
-      orderBy: { date: 'desc' as const },
-      select: {
-        id: true,
-        product_type: true,
-        condition: true,
-        recoin_reward: true,
-        status: true,
-        date: true,
-        user: { select: { id: true, email: true, username: true } },
-      },
+  async reject(recycleId: number) {
+    const rec = await this.prisma.recycle.findUnique({
+      where: { id: recycleId },
+      select: { id: true, status: true },
+    });
+
+    if (!rec) throw new NotFoundException('Recycle not found');
+    if (rec.status !== 'PENDING') {
+      throw new BadRequestException('Ez a kérelem már nem PENDING (már kezelték).');
+    }
+
+    return this.prisma.recycle.update({
+      where: { id: recycleId },
+      data: { status: 'REJECTED' },
+      select: { id: true, status: true },
     });
   }
 }

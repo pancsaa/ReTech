@@ -4,6 +4,7 @@ import { LoginUserDto, RegisterUserDto } from './dto/auth.dto';
 import {FileInterceptor} from "@nestjs/platform-express"
 import { diskStorage } from 'multer';
 import { randomUUID } from 'crypto';
+import { Public } from './public.decorator';
 
 function createValidName(imageName: string){
     return imageName.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9._-]/g, '');
@@ -13,6 +14,7 @@ function createValidName(imageName: string){
 export class AuthController {
     constructor(private readonly authService: AuthService){}
 
+    @Public()
     @UseInterceptors(
         FileInterceptor('image',{
             storage: diskStorage({
@@ -33,12 +35,12 @@ export class AuthController {
     )
     @Post('register')
     async register(@Body() user: RegisterUserDto, @UploadedFile() file?: Express.Multer.File){
-        //if(!file) throw new BadRequestException('Image file is missing.');
         return await this.authService.authRegister({
             ...user, profile_image: file ? `/profilePictures/${file.filename}` : undefined
         });
     }
 
+    @Public()
     @Post('login')
     async login(@Body() user:LoginUserDto){
         return await this.authService.authLogin(user)

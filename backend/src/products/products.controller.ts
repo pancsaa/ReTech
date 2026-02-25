@@ -1,58 +1,58 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-  Query,
-  Req,
-  UseGuards,
-  UseInterceptors,
-  UploadedFile,
-} from '@nestjs/common';
-import { diskStorage } from 'multer';
+import {Controller,Get,Post,Body,Param,Req,UploadedFile,UseInterceptors,BadRequestException,Delete} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 import { ProductsService } from './products.service';
-import { CreateProductDto, ProductsQueryDto } from './dto/products.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Public } from '../auth/public.decorator';
+import { CreateProductDto } from './dto/products.dto';
+import { randomUUID } from 'crypto';
 
-function createValidName(name: string) {
-  return name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9._-]/g, '');
+function createValidName(imageName: string) {
+  return imageName
+    .replace(/\s+/g, '-')
+    .replace(/[^a-zA-Z0-9._-]/g, '');
 }
 
-@Public()
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) { }
 
+  // Marketplace
+  @Public()
   @Get()
-  list(@Query() q: ProductsQueryDto) {
-    return this.productsService.list(q);
+  async getAll() {
+    return this.productsService.getAll();
   }
 
+  // Egy termék
+  @Public()
   @Get(':id')
-  getOne(@Param('id', ParseIntPipe) id: number) {
-    return this.productsService.getOne(id);
+  async getOne(@Param('id') id: string) {
+    return this.productsService.getOne(Number(id));
   }
 
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(
+  // Saját termékek
+  @Get('me')
+  async myProducts(@Req() req: any) {
+    return this.productsService.myProducts(req.user.id);
+  }
+
+  // Új termék feltöltése képpel
+@UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
         destination: './uploads/products',
         filename: (req, file, cb) => {
           const safe = createValidName(file.originalname);
-          const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}-${safe}`;
-          cb(null, unique);
+          cb(null, `${randomUUID()}-${safe}`);
         },
       }),
-      limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+      limits: { fileSize: 5 * 1024 * 1024 },
       fileFilter: (req, file, cb) => {
         if (!file.mimetype.startsWith('image/')) {
-          return cb(new BadRequestException('Csak képfájl tölthető fel!') as any, false);
+          return cb(
+            new BadRequestException('Csak képfájl tölthető fel!') as any,
+            false,
+          );
         }
         cb(null, true);
       },
@@ -61,17 +61,29 @@ export class ProductsController {
   @Post()
   async create(
     @Body() dto: CreateProductDto,
-    @UploadedFile() file: Express.Multer.File,
+    @Req() req: any,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    if (!file) {
+      throw new BadRequestException('Kép feltöltése kötelező!');
+    }
+
+    return this.productsService.create({
+      ...dto,
+      seller_id: req.user.id,
+      image_url: `/uploads/products/${file.filename}`, // <-- ugyanaz a minta, mint profilePictures-nél
+    });
+  }
+
+  @Delete(':id')
+  async deleteProduct(
+    @Param('id') id: string,
     @Req() req: any,
   ) {
-    if (!file) throw new BadRequestException('A termék kép feltöltése kötelező.');
-
-    // JwtStrategy.validate() visszaadja a user-t -> req.user
-    const sellerId = req.user?.id;
-    if (!sellerId) throw new BadRequestException('Hiányzó felhasználói azonosító a tokenben.');
-
-    const imageUrl = `/uploads/products/${file.filename}`;
-
-    return this.productsService.create(dto, sellerId, imageUrl);
+    return this.productsService.deleteProduct(
+      Number(id),
+      req.user.id,
+      req.user.role,
+    );
   }
 }

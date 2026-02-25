@@ -1,27 +1,20 @@
-import { Controller, Param, ParseIntPipe, Post, Req, UseGuards, Get } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
+import { CreateTransactionDto } from './dto/transactions.dto';
 
-@UseGuards(JwtAuthGuard)
 @Controller('transactions')
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
-  @Post('purchase/:productId')
-  purchase(@Param('productId', ParseIntPipe) productId: number, @Req() req: any) {
-    const buyerId = req.user?.id;
-    return this.transactionsService.purchase(productId, buyerId);
+  // vásárlás
+  @Post()
+  async buy(@Body() dto: CreateTransactionDto, @Req() req: any) {
+    return this.transactionsService.buy(dto.product_id, req.user.id);
   }
 
-  //saját vásárlásaid listája
-  @Get('my-purchases')
-  myPurchases(@Req() req: any) {
-    return this.transactionsService.myPurchases(req.user?.id);
-  }
-
-  //saját eladásaid (seller oldalról)
-  @Get('my-sales')
-  mySales(@Req() req: any) {
-    return this.transactionsService.mySales(req.user?.id);
+  // saját vásárlások
+  @Get('me')
+  async myPurchases(@Req() req: any) {
+    return this.transactionsService.myPurchases(req.user.id);
   }
 }
