@@ -12,7 +12,7 @@ interface UserMenuDropdownProps {
   email: string;
   recoinBalance: number;
   myProducts: Product[];
-  onLogout: () => void;
+  onLogout: () => void;          // Ezt a prop-ot a szülő adja át (App.tsx / Navbar.tsx)
   isLoading?: boolean;
 }
 
@@ -36,7 +36,7 @@ export default function UserMenuDropdown({
 
   const handleClosePanel = () => {
     setIsAddPanelOpen(false);
-    // Reset mezők opcionálisan
+    // Mezők resetelése
     setBrand('');
     setType('');
     setRecoinAmount(0);
@@ -51,9 +51,22 @@ export default function UserMenuDropdown({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Itt majd API hívás jön: új termék létrehozása
-    console.log('Új hirdetés:', { brand, type, recoinAmount, image: imageFile?.name });
-    // Pl. FormData-val küldés backendre
+    // Itt majd a valódi API hívás jön (FormData-val)
+    console.log('Új hirdetés adatok:', {
+      brand,
+      type,
+      recoinAmount,
+      image: imageFile?.name,
+    });
+
+    // Példa API hívás (később bővíthető):
+    // const formData = new FormData();
+    // formData.append('brand', brand);
+    // formData.append('model', type);
+    // formData.append('price_recoins', recoinAmount.toString());
+    // if (imageFile) formData.append('image', imageFile);
+    // fetch('/api/products', { method: 'POST', body: formData });
+
     handleClosePanel();
   };
 
@@ -108,6 +121,7 @@ export default function UserMenuDropdown({
               + Hirdetés hozzáadása
             </button>
           </div>
+
           <div className="space-y-3 max-h-48 overflow-y-auto">
             {myProducts.length === 0 ? (
               <p className="text-sm text-gray-500 text-center py-4">
@@ -135,10 +149,10 @@ export default function UserMenuDropdown({
           </div>
         </div>
 
-        {/* Kijelentkezés gomb */}
+        {/* Kijelentkezés gomb – most már működik */}
         <div className="p-4">
           <button
-            onClick={onLogout}
+            onClick={onLogout}  // Ezt a prop-ot használja → App.tsx vagy Navbar kezeli a logikát
             className="w-full py-3 bg-red-50 hover:bg-red-100 text-red-700 font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,23 +168,21 @@ export default function UserMenuDropdown({
         </div>
       </div>
 
-      {/* Jobbról becsúszó panel (slide-in form) */}
+      {/* Jobbról becsúszó panel – hirdetés hozzáadása */}
       {isAddPanelOpen && (
         <>
-          {/* Blur háttér + sötét overlay */}
+          {/* Blur + sötét overlay (kívül kattintás zárja) */}
           <div
             className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity duration-300"
-            onClick={handleClosePanel} // kívül kattintás zárja (opcionális)
+            onClick={handleClosePanel}
           />
 
-          {/* A panel maga – jobb oldalról slide-in */}
           <div
             className={`fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto ${
               isAddPanelOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
           >
             <div className="p-6">
-              {/* Cím + zár gomb */}
               <div className="flex justify-between items-center mb-8">
                 <h2 className="text-2xl font-bold text-gray-900">Hirdetés hozzáadása</h2>
                 <button
@@ -182,7 +194,6 @@ export default function UserMenuDropdown({
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Márka */}
                 <div>
                   <label htmlFor="brand" className="block text-sm font-medium text-gray-700 mb-1.5">
                     Márka
@@ -198,7 +209,6 @@ export default function UserMenuDropdown({
                   />
                 </div>
 
-                {/* Típus / Modell */}
                 <div>
                   <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-1.5">
                     Típus / Modell
@@ -209,12 +219,11 @@ export default function UserMenuDropdown({
                     value={type}
                     onChange={(e) => setType(e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition"
-                    placeholder="pl. Galaxy S23, iPhone 14 Pro, Air Max..."
+                    placeholder="pl. Galaxy S23, iPhone 14 Pro..."
                     required
                   />
                 </div>
 
-                {/* ReCoin összeg */}
                 <div>
                   <label htmlFor="recoin" className="block text-sm font-medium text-gray-700 mb-1.5">
                     ReCoin összeg
@@ -231,7 +240,6 @@ export default function UserMenuDropdown({
                   />
                 </div>
 
-                {/* Kép feltöltés */}
                 <div>
                   <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1.5">
                     Kép feltöltése
@@ -250,7 +258,6 @@ export default function UserMenuDropdown({
                   )}
                 </div>
 
-                {/* Submit gomb */}
                 <button
                   type="submit"
                   className="w-full py-3.5 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 focus:ring-4 focus:ring-green-200 transition shadow-md"

@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+  moduleFormat="cjs"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+enum ProductStatus {
+  AVAILABLE
+  SOLD
+}
+
+enum RecycleStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User{
+  id  Int @id @default(autoincrement())
+  username  String @unique
+  email String  @unique
+  password  String
+  role  Role  @default(USER)
+  recoin_balance  Int @default(0)
+  register_date DateTime  @default(now())
+  profile_image String?
+
+  products Product[]
+  recycles  Recycle[]
+  purchases Transaction[] @relation("BuyerTransaction")
+}
+
+model Product {
+  id  Int @id @default(autoincrement())
+  seller_id Int
+  seller  User  @relation(fields: [seller_id],references: [id], onDelete: Cascade)
+  title String
+  description String
+  condition String
+  category  String
+  brand String
+  model String
+  price_recoin  Int
+  status ProductStatus  @default(AVAILABLE)
+  upload_date DateTime  @default(now())
+  image_url String
+
+  purchases Transaction[]
+}
+
+model Recycle {
+  id  Int @id @default(autoincrement())
+  user_id Int
+  user  User  @relation(fields: [user_id],references: [id],onDelete: Cascade)
+  product_type  String
+  condition String
+  recoin_reward Int
+  status RecycleStatus @default(PENDING)
+  date  DateTime  @default(now())
+}
+
+model Transaction {
+  id  Int @id @default(autoincrement())
+  buyer_id  Int
+  buyer User  @relation("BuyerTransaction",fields: [buyer_id],references: [id],onDelete: Cascade)
+  product_id  Int
+  product Product @relation(fields: [product_id],references: [id],onDelete: Cascade)
+  amount  Int
+  transaction_date  DateTime  @default(now())
+}
