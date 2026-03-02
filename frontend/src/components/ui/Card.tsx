@@ -8,7 +8,7 @@ interface CardProps {
   onClick?: () => void;
 }
 
-const Cards: React.FC<CardProps> = ({
+const Card: React.FC<CardProps> = ({
   image,
   title,
   buttonText = "Read more",
@@ -80,4 +80,4 @@ const Cards: React.FC<CardProps> = ({
   );
 };
 
-export default Cards;
+export default Card;

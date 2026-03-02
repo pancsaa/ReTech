@@ -1,40 +1,45 @@
-// frontend/src/types/type.user.ts
-
+// src/types/type.user.ts
 export interface User {
-  user_id: number | string;
+  id: number;
   username: string;
   email: string;
-  password?: string;                  // soha ne küldjük/mentsük a frontendnek
-  role: 'user' | 'admin' | 'seller' | string;
-  recoins_balance: number;
-  recoins_balance_date?: string;      // ISO string pl. "2026-02-26T12:00:00Z"
+  role: 'user' | 'admin' | 'seller';
+  recoin_balance: number;
   register_date: string;
-  products?: Product[];               // lazy-loaded vagy joined esetén
+  profile_image?: string | null;
+  products?: Product[];
 }
 
 export interface Product {
-  product_id: number | string;
-  seller_id: number | string;
+  id: number;
+  seller_id: number;
   title: string;
   description?: string;
-  condition: 'new' | 'used' | 'like_new' | 'damaged' | string;
+  condition: string;
   category: string;
   brand?: string;
   model?: string;
-  price: number;                      // normál ár (ha van)
-  price_recoins?: number;             // recoins ár
-  status: 'active' | 'sold' | 'reserved' | 'deleted' | string;
-  upload_date?: string;
-  images?: string[];                  // jobb tömbként, ha több kép van (korábban string volt)
+  price_recoin: number;
+  status: 'active' | 'sold' | 'reserved' | 'deleted';
+  upload_date: string;
+  image_url?: string;
 }
 
-export interface Transaction { /* marad */ }
-export interface Recycle { /* marad */ }
+export interface Transaction {
+  id: number;
+  buyer_id: number;
+  product_id: number;
+  amount: number;
+  transaction_date: string;
+}
+
+export interface Recycle {
+  id: number;
+  user_id: number;
+  product_type: string;
+  condition: string;
+  recoin_reward: number;
+  date: string;
+}
 
 export type UserProfile = Omit<User, 'password'>;
-
-export interface UserWithStats extends UserProfile {
-  productCount: number;
-  transactionCount: number;
-  recycleCount: number;
-}

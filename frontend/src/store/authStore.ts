@@ -1,56 +1,29 @@
-// frontend/src/store/authStore.ts
-import { create } from 'zustand'
-import type { User } from "../types/type.user"; 
+// src/store/authStore.ts
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { User } from '../types/type.user';
 
-// Állapot típus
 interface AuthState {
-  user: User | null
-  token: string | null
-  isAuthenticated: boolean
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
 
-  // Műveletek
-  login: (userData: User, token: string) => void
-  logout: () => void
-
-  // Opcionális: ha később kell user frissítés (pl. egyenleg változás)
-  updateUser: (updatedUser: Partial<User>) => void
+  login: (user: User, token: string) => void;
+  logout: () => void;
 }
 
-// Store létrehozása
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  token: null,
-  isAuthenticated: false,
-
-  login: (userData, token) => {
-    // Mentés localStorage-ba (hogy refresh után is megmaradjon)
-    localStorage.setItem('token', token)
-    localStorage.setItem('user', JSON.stringify(userData))
-
-    set({
-      user: userData,
-      token,
-      isAuthenticated: true,
-    })
-  },
-
-  logout: () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-
-    set({
+export const useAuthStore = create(
+  persist<AuthState>(
+    (set) => ({
       user: null,
       token: null,
       isAuthenticated: false,
-    })
-  },
 
-  updateUser: (updatedUser) => {
-    set((state) => {
-      if (!state.user) return state
-      const newUser = { ...state.user, ...updatedUser }
-      localStorage.setItem('user', JSON.stringify(newUser))
-      return { user: newUser }
-    })
-  },
-}))
+      login: (user, token) => set({ user, token, isAuthenticated: true }),
+      logout: () => set({ user: null, token: null, isAuthenticated: false }),
+    }),
+    {
+      name: 'retech-auth',
+    }
+  )
+);
