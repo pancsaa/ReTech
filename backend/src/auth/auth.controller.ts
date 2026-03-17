@@ -1,48 +1,47 @@
-import { BadRequestException, Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {Body,Controller,Get,Post,Req,UploadedFile,UseInterceptors,} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 import { AuthService } from './auth.service';
 import { LoginUserDto, RegisterUserDto } from './dto/auth.dto';
-import {FileInterceptor} from "@nestjs/platform-express"
-import { diskStorage } from 'multer';
-import { randomUUID } from 'crypto';
 import { Public } from './public.decorator';
-
-function createValidName(imageName: string){
-    return imageName.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9._-]/g, '');
-}
 
 @Controller('authorise')
 export class AuthController {
-    constructor(private readonly authService: AuthService){}
+  constructor(private readonly authService: AuthService) {}
 
-    @Public()
-    @UseInterceptors(
-        FileInterceptor('image',{
-            storage: diskStorage({
-                destination:'./uploads/profilePictures',
-                filename: (req, file, cb)=>{
-                    const safe=createValidName(file.originalname)
-                    cb(null, `${randomUUID()}-${safe}`)
-                }
-            }),
-            limits: {fileSize: 3*1024*1024},
-            fileFilter: (req, file, cb)=>{
-                if(!file.mimetype.startsWith('image/')){
-                    return cb(new BadRequestException('Only image files are allowed.')as any, false)
-                }
-                cb(null, true)
-            }
-        }),
-    )
-    @Post('register')
-    async register(@Body() user: RegisterUserDto, @UploadedFile() file?: Express.Multer.File){
-        return await this.authService.authRegister({
-            ...user, profile_image: file ? `/profilePictures/${file.filename}` : undefined
-        });
+  @Public()
+  @Post('register')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './uploads/profilePictures',
+        filename: (_req, file, cb) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          cb(null, `profile-${uniqueSuffix}${extname(file.originalname)}`);
+        },
+      }),
+    }),
+  )
+  async register(
+    @Body() dto: RegisterUserDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    if (file) {
+      dto.profile_image = `/uploads/profilePictures/${file.filename}`;
     }
+    return this.authService.authRegister(dto);
+  }
 
-    @Public()
-    @Post('login')
-    async login(@Body() user:LoginUserDto){
-        return await this.authService.authLogin(user)
-    }
+  @Public()
+  @Post('login')
+  async login(@Body() dto: LoginUserDto) {
+    return this.authService.authLogin(dto);
+  }
+
+  @Get('me')
+  async getMe(@Req() req: any) {
+    return this.authService.getMe(req.user.id);
+  }
 }

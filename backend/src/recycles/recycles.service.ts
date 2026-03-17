@@ -7,15 +7,22 @@ import { calculateReward } from './reward.util';
 export class RecyclesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  //pending
-  async create(dto: CreateRecycleDto, userId: number) {
+  async create(dto: CreateRecycleDto, userId: number, file?: Express.Multer.File) {
     const reward = calculateReward(dto.product_type, dto.condition);
+
+    const imageUrl = file ? `/uploads/recycles/${file.filename}` : null;
 
     return this.prisma.recycle.create({
       data: {
         user_id: userId,
         product_type: dto.product_type,
         condition: dto.condition,
+        category: dto.category,
+        brand: dto.brand,
+        model: dto.model,
+        description: dto.description,
+        note: dto.note,
+        image_url: imageUrl,
         recoin_reward: reward,
         status: 'PENDING',
       },
@@ -24,13 +31,18 @@ export class RecyclesService {
         status: true,
         product_type: true,
         condition: true,
+        category: true,
+        brand: true,
+        model: true,
+        description: true,
+        note: true,
+        image_url: true,
         recoin_reward: true,
         date: true,
       },
     });
   }
 
-  //saját lista
   async myRecycles(userId: number) {
     return this.prisma.recycle.findMany({
       where: { user_id: userId },
@@ -40,6 +52,12 @@ export class RecyclesService {
         status: true,
         product_type: true,
         condition: true,
+        category: true,
+        brand: true,
+        model: true,
+        description: true,
+        note: true,
+        image_url: true,
         recoin_reward: true,
         date: true,
       },
@@ -50,8 +68,27 @@ export class RecyclesService {
     return this.prisma.recycle.findMany({
       where: { status },
       orderBy: { date: 'asc' },
-      include: {
-        user: { select: { id: true, username: true, email: true, recoin_balance: true } },
+      select: {
+        id: true,
+        status: true,
+        product_type: true,
+        condition: true,
+        category: true,
+        brand: true,
+        model: true,
+        description: true,
+        note: true,
+        image_url: true,
+        recoin_reward: true,
+        date: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            recoin_balance: true,
+          },
+        },
       },
     });
   }
@@ -63,18 +100,19 @@ export class RecyclesService {
         select: { id: true, status: true, user_id: true, recoin_reward: true },
       });
 
-      if (!rec) throw new NotFoundException('Recycle not found');
+      if (!rec) {
+        throw new NotFoundException('Recycle not found');
+      }
+
       if (rec.status !== 'PENDING') {
         throw new BadRequestException('Ez a kérelem már nem PENDING (már kezelték).');
       }
 
-      // 1) recycle státusz approved
       await tx.recycle.update({
         where: { id: recycleId },
         data: { status: 'APPROVED' },
       });
 
-      // 2) user balance +reward
       const updatedUser = await tx.user.update({
         where: { id: rec.user_id },
         data: { recoin_balance: { increment: rec.recoin_reward } },
@@ -96,7 +134,10 @@ export class RecyclesService {
       select: { id: true, status: true },
     });
 
-    if (!rec) throw new NotFoundException('Recycle not found');
+    if (!rec) {
+      throw new NotFoundException('Recycle not found');
+    }
+
     if (rec.status !== 'PENDING') {
       throw new BadRequestException('Ez a kérelem már nem PENDING (már kezelték).');
     }

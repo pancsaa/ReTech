@@ -9,11 +9,10 @@ async function main() {
   });
 
   const prisma = app.get(PrismaService);
-
   const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@gmail.com';
   const adminPassword = process.env.ADMIN_PASSWORD ?? 'admin123';
-
   const existing = await prisma.user.findUnique({ where: { email: adminEmail } });
+  const hash = await argon2.hash(adminPassword);
 
   if (existing) {
     console.log('Admin already exists:', adminEmail);
@@ -21,17 +20,14 @@ async function main() {
     return;
   }
 
-  const hash = await argon2.hash(adminPassword);
-
   await prisma.user.create({
     data: {
       email: adminEmail,
       username: 'admin',
       password: hash,
-      role: 'ADMIN', // ha nálad string
+      role: 'ADMIN', 
     },
   });
-
   console.log('Admin created:', adminEmail);
   await app.close();
 }

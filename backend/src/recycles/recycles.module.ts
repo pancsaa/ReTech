@@ -5,7 +5,7 @@ import { RecyclesService } from './recycles.service';
 import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
-  imports:[PrismaModule],
+  imports: [PrismaModule],
   controllers: [RecyclesController, AdminRecyclesController],
   providers: [RecyclesService],
 })

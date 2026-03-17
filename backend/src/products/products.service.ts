@@ -1,13 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {Injectable,NotFoundException,ForbiddenException,BadRequestException,} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateProductDto } from './dto/products.dto';
-import { ForbiddenException } from '@nestjs/common';
 
 @Injectable()
 export class ProductsService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-  // marketplace lista
   async getAll() {
     return this.prisma.product.findMany({
       where: { status: 'AVAILABLE' },
@@ -24,7 +21,6 @@ export class ProductsService {
     });
   }
 
-  // egy termék
   async getOne(id: number) {
     const product = await this.prisma.product.findUnique({
       where: { id },
@@ -43,7 +39,6 @@ export class ProductsService {
     return product;
   }
 
-  // saját termékek
   async myProducts(userId: number) {
     return this.prisma.product.findMany({
       where: { seller_id: userId },
@@ -51,8 +46,7 @@ export class ProductsService {
     });
   }
 
-  // új termék létrehozás
- async create(data: {
+  async create(data: {
     seller_id: number;
     title: string;
     description: string;
@@ -63,14 +57,15 @@ export class ProductsService {
     price_recoin: number;
     image_url: string;
   }) {
-    return this.prisma.product.create({ data });
+    return this.prisma.product.create({
+      data: {
+        ...data,
+        status: 'PENDING',
+      },
+    });
   }
 
-  async deleteProduct(
-    productId: number,
-    userId: number,
-    role: string,
-  ) {
+  async deleteProduct(productId: number, userId: number, role: string) {
     const product = await this.prisma.product.findUnique({
       where: { id: productId },
     });
@@ -85,6 +80,63 @@ export class ProductsService {
 
     return this.prisma.product.delete({
       where: { id: productId },
+    });
+  }
+
+  async adminList(status: 'PENDING' | 'AVAILABLE' | 'REJECTED' | 'SOLD') {
+    return this.prisma.product.findMany({
+      where: { status },
+      orderBy: { upload_date: 'desc' },
+      include: {
+        seller: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            profile_image: true,
+          },
+        },
+      },
+    });
+  }
+
+  async approveProduct(productId: number) {
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+      select: { id: true, status: true },
+    });
+
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+
+    if (product.status !== 'PENDING') {
+      throw new BadRequestException('Csak PENDING hirdetés fogadható el.');
+    }
+
+    return this.prisma.product.update({
+      where: { id: productId },
+      data: { status: 'AVAILABLE' },
+    });
+  }
+
+  async rejectProduct(productId: number) {
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+      select: { id: true, status: true },
+    });
+
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+
+    if (product.status !== 'PENDING') {
+      throw new BadRequestException('Csak PENDING hirdetés utasítható el.');
+    }
+
+    return this.prisma.product.update({
+      where: { id: productId },
+      data: { status: 'REJECTED' },
     });
   }
 }

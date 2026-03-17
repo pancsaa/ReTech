@@ -21,7 +21,7 @@ export function calculateReward(productTypeRaw: string, conditionRaw: string) {
   const condition = (conditionRaw || '').trim().toUpperCase() as ConditionKey;
 
   const base = baseRewardByType[productType] ?? baseRewardByType.OTHER;
-  const mult = conditionMultiplier[condition] ?? 0.7; //default
+  const mult = conditionMultiplier[condition] ?? 0.7;
 
   return Math.max(1, Math.round(base * mult));
 }

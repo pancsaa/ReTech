@@ -1,4 +1,4 @@
-import {Controller,Get,Post,Body,Param,Req,UploadedFile,UseInterceptors,BadRequestException,Delete} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Req, UploadedFile, UseInterceptors, BadRequestException, Delete } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ProductsService } from './products.service';
@@ -16,28 +16,24 @@ function createValidName(imageName: string) {
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) { }
 
-  // Marketplace
   @Public()
   @Get()
   async getAll() {
     return this.productsService.getAll();
   }
 
-  // Egy termék
+  @Get('me')
+  async myProducts(@Req() req: any) {
+    return this.productsService.myProducts(req.user.id);
+  }
+
   @Public()
   @Get(':id')
   async getOne(@Param('id') id: string) {
     return this.productsService.getOne(Number(id));
   }
 
-  // Saját termékek
-  @Get('me')
-  async myProducts(@Req() req: any) {
-    return this.productsService.myProducts(req.user.id);
-  }
-
-  // Új termék feltöltése képpel
-@UseInterceptors(
+  @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
         destination: './uploads/products',
@@ -71,7 +67,7 @@ export class ProductsController {
     return this.productsService.create({
       ...dto,
       seller_id: req.user.id,
-      image_url: `/uploads/products/${file.filename}`, // <-- ugyanaz a minta, mint profilePictures-nél
+      image_url: `/uploads/products/${file.filename}`,
     });
   }
 

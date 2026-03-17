@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE `Recycle` ADD COLUMN `brand` VARCHAR(191) NULL,
+    ADD COLUMN `category` VARCHAR(191) NULL,
+    ADD COLUMN `description` VARCHAR(191) NULL,
+    ADD COLUMN `image_url` VARCHAR(191) NULL,
+    ADD COLUMN `model` VARCHAR(191) NULL,
+    ADD COLUMN `note` VARCHAR(191) NULL;
