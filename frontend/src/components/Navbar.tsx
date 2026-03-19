@@ -44,9 +44,9 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Products", path: "/products" },
-    { name: "About us", path: "/about" },
+    { name: "Főoldal", path: "/" },
+    { name: "Termékek", path: "/products" },
+    { name: "Rólunk", path: "/about" },
   ];
 
   return (

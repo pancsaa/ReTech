@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
-import {getMyProducts,deleteProduct,createProduct,} from "../service/service";
+import { getMyProducts, deleteProduct, createProduct, } from "../service/service";
 import type { Product, CreateProductPayload } from "../types/types";
 
 const API_BASE_URL = "http://localhost:3000";
@@ -12,7 +12,7 @@ const initialForm: CreateProductPayload = {
   category: "",
   brand: "",
   model: "",
-  price_recoin: 0,
+  price_recoin: 1,
 };
 
 export default function MyAds() {
@@ -223,28 +223,39 @@ export default function MyAds() {
 
               <div>
                 <label className="block text-sm mb-2 text-blue-100">Állapot</label>
-                <input
-                  type="text"
+                <select
                   name="condition"
                   value={form.condition}
                   onChange={handleChange}
                   required
-                  placeholder="Pl. Újszerű"
-                  className="w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3"
-                />
+                  className="w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3 text-white"
+                >
+                  <option value="" className="text-black">Válassz állapotot</option>
+                  <option value="Új" className="text-black">Új</option>
+                  <option value="Újszerű" className="text-black">Újszerű</option>
+                  <option value="Használt" className="text-black">Jó</option>
+                  <option value="Használt" className="text-black">Közepes</option>
+                </select>
+                
               </div>
 
               <div>
                 <label className="block text-sm mb-2 text-blue-100">Kategória</label>
-                <input
-                  type="text"
+                <select
                   name="category"
                   value={form.category}
                   onChange={handleChange}
                   required
-                  placeholder="Pl. Telefon"
-                  className="w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3"
-                />
+                  className="w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3 text-white"
+                >
+                  <option value="" className="text-black">Válassz kategóriát</option>
+                  <option value="Telefon" className="text-black">Telefon</option>
+                  <option value="Laptop" className="text-black">Laptop</option>
+                  <option value="Tablet" className="text-black">Tablet</option>
+                  <option value="Elektronikai kiegészítő" className="text-black">
+                    Elektronikai kiegészítő
+                  </option>
+                </select>
               </div>
 
               <div className="md:col-span-2">

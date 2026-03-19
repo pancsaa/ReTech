@@ -104,8 +104,7 @@ export default function Home() {
             </p>
 
             <p className="text-lg sm:text-xl md:text-2xl text-blue-100/90 max-w-4xl leading-relaxed">
-              Környezetbarát és emberközpontú rendszert építünk, ahol az elektronikai cikkek
-              nem a szeméttelepen végzik, hanem új gazdánál kapnak második esélyt.
+              Környezetbarát és közösségközpontú platformot építünk, ahol az elektronikai eszközök nem hulladékká válnak, hanem új gazdánál kapnak második esélyt.
             </p>
 
             <div className="flex gap-4 flex-wrap justify-center mt-6">
@@ -234,7 +233,7 @@ export default function Home() {
 
       <div className="bg-black/20 backdrop-blur-sm py-10 text-center text-blue-5aa00 border-t border-white/10">
         <p className="text-lg md:text-xl font-medium flex items-center justify-center gap-3">
-          ♻️ Kevesebb hulladék • Több újrakezdés • Fenntarthatóbb elektronika
+          ♻️ Kevesebb hulladék • Több második esély • Fenntarthatóbb technológia ♻️
         </p>
       </div>
 

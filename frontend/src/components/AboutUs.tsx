@@ -9,16 +9,13 @@ export default function AboutUs() {
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <p className="text-teal-300 uppercase tracking-[0.3em] text-sm font-semibold mb-4">
-              About ReTech
+              Ismerd meg a ReTech-et
             </p>
             <h1 className="text-5xl md:text-6xl font-extrabold leading-tight">
               Technológiának második életet adni.
             </h1>
             <p className="mt-6 text-lg text-blue-100/85 leading-8 max-w-2xl">
-              A ReTech ötlete abból a mindennapi problémából született, hogy sokan
-              rendelkezünk olyan működő elektronikai eszközökkel — legyen szó
-              okostelefonról, laptopról vagy tabletről — amelyeket már nem használunk,
-              mégis nehéz számukra megbízható és biztonságos új tulajdonost találni.
+              A ReTech egy mindennapi problémára ad választ: sok háztartásban találhatók olyan működő elektronikai eszközök, amelyeket már nem használnak, mégis nehéz számukra megbízható és biztonságos új tulajdonost találni.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-4">
@@ -63,7 +60,7 @@ export default function AboutUs() {
             Célunk egy modern, mobilbarát és gyors weboldal létrehozása volt, amely
             nem csupán piactér, hanem egy felelős közösségi tér is. Olyan platformot
             szerettünk volna építeni, ahol az elektronikai eszközök új életet kapnak,
-            a felhasználók pedig bizalommal és egyszerűen tudnak adni-venni.
+            a felhasználók pedig bizalommal és egyszerűen tudnak eladni és venni termékeket.
           </div>
         </div>
       </section>

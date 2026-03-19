@@ -10,7 +10,6 @@ const productTypes = [
   { value: "PHONE", label: "Telefon" },
   { value: "LAPTOP", label: "Laptop" },
   { value: "TABLET", label: "Tablet" },
-  { value: "CONSOLE", label: "Konzol" },
   { value: "OTHER", label: "Egyéb" },
 ];
 
@@ -19,7 +18,6 @@ const conditions = [
   { value: "LIKE_NEW", label: "Újszerű" },
   { value: "GOOD", label: "Jó" },
   { value: "FAIR", label: "Közepes" },
-  { value: "POOR", label: "Gyenge" },
 ];
 
 export default function MyRecycles() {
