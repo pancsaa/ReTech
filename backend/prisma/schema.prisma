@@ -75,12 +75,14 @@ model Recycle {
 }
 
 model Transaction {
-  id                Int      @id @default(autoincrement())
-  buyer_id          Int
-  buyer             User     @relation("BuyerTransaction", fields: [buyer_id], references: [id], onDelete: Cascade)
-  product_id        Int
-  product           Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
-  amount            Int
-  shipping_address  String
-  transaction_date  DateTime @default(now())
+  id                   Int      @id @default(autoincrement())
+  buyer_id             Int
+  buyer                User     @relation("BuyerTransaction", fields: [buyer_id], references: [id], onDelete: Cascade)
+  product_id           Int
+  product              Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  amount               Int
+  shipping_address     String
+  transaction_date     DateTime @default(now())
+  delivered_confirmed  Boolean  @default(false)
+  delivered_at         DateTime?
 }

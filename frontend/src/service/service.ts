@@ -32,6 +32,27 @@ export async function postUser(data: PostUsers, imageFile?: File): Promise<any> 
     throw error;
   }
 }
+export async function confirmDelivery(
+  transactionId: number,
+  token: string
+): Promise<any> {
+  try {
+    const response = await api.patch(
+      `/transactions/${transactionId}/confirm-delivery`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Átvétel visszaigazolási hiba:", error);
+    throw error;
+  }
+}
 
 export async function getMe(token: string): Promise<any> {
   try {
