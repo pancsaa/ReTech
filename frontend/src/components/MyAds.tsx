@@ -236,7 +236,7 @@ export default function MyAds() {
                   <option value="Használt" className="text-black">Jó</option>
                   <option value="Használt" className="text-black">Közepes</option>
                 </select>
-                
+
               </div>
 
               <div>
@@ -260,14 +260,20 @@ export default function MyAds() {
 
               <div className="md:col-span-2">
                 <label className="block text-sm mb-2 text-blue-100">Leírás</label>
+
                 <textarea
                   name="description"
                   value={form.description}
                   onChange={handleChange}
                   required
                   rows={4}
+                  placeholder="Pl.: iPhone 11, jó állapotban, kisebb karcokkal, töltővel együtt"
                   className="w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3"
                 />
+
+                <p className="text-xs text-blue-100/60 mt-1">
+                  Minimum 10 szó megadása ajánlott a sikeres eladáshoz.
+                </p>
               </div>
 
               <div className="md:col-span-2">

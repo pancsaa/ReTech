@@ -149,22 +149,26 @@ export default function Home() {
                 return (
                   <div
                     key={product.id}
-                    className="card rounded-3xl bg-white/10 backdrop-blur-sm shadow-xl border border-white/10 overflow-hidden hover:scale-[1.02] transition"
+                    className="card rounded-3xl bg-white/10 backdrop-blur-sm shadow-xl border border-white/10 overflow-hidden hover:scale-[1.02] transition p-2"
                   >
-                    <figure>
+                    {/* KÉP */}
+                    <figure className="flex items-center justify-center px-4 pt-4 pb-2 h-60">
                       <img
                         src={`${API_BASE_URL}${product.image_url}`}
                         alt={product.title}
-                        className="h-60 w-full object-cover"
+                        className="max-h-full max-w-full object-contain rounded-2xl"
                       />
                     </figure>
 
-                    <div className="card-body flex flex-col justify-between">
-                      <h2 className="card-title text-white text-xl">
+                    {/* TARTALOM */}
+                    <div className="card-body px-4 pb-4 pt-2 flex flex-col justify-between">
+                      {/* CÍM */}
+                      <h2 className="card-title text-white text-xl mb-2">
                         {product.title}
                       </h2>
 
-                      <div className="flex flex-wrap gap-2 mt-3 text-sm">
+                      {/* TAG-ek */}
+                      <div className="flex flex-wrap gap-2 mt-2 text-sm min-h-[80px] content-start">
                         <span className="bg-white/10 px-3 py-1 rounded-full text-white/80">
                           {product.brand}
                         </span>
@@ -186,8 +190,9 @@ export default function Home() {
                         </span>
                       </div>
 
-                      <div className="flex justify-between items-center mt-5 gap-3">
-                        <span className=" font-bold text-white bg-teal-500/20 px-4 py-2 rounded-full font-semibold">
+                      {/* ALSÓ RÉSZ */}
+                      <div className="flex justify-between items-center mt-3 gap-3">
+                        <span className="font-bold text-white bg-teal-500/20 px-4 py-2 rounded-full">
                           {product.price_recoin} Recoin
                         </span>
 
@@ -233,7 +238,7 @@ export default function Home() {
 
       <div className="bg-black/20 backdrop-blur-sm py-10 text-center text-blue-5aa00 border-t border-white/10">
         <p className="text-lg md:text-xl font-medium flex items-center justify-center gap-3">
-          ♻️ Kevesebb hulladék • Több második esély • Fenntarthatóbb technológia ♻️
+          ♻️ • Kevesebb hulladék • Több második esély • Környezetbarát megoldás ♻️
         </p>
       </div>
 
