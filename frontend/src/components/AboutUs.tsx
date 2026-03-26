@@ -37,6 +37,7 @@ export default function AboutUs() {
             </div>
           </div>
 
+
           <div>
             <img
               src="https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?auto=format&fit=crop&w=1400&q=80"
@@ -80,7 +81,7 @@ export default function AboutUs() {
         <div className="bg-white/5 rounded-3xl border border-white/10 p-8 backdrop-blur-sm">
           <h3 className="text-3xl font-bold">Technológiai háttér</h3>
           <p className="mt-6 text-lg text-blue-100/80 leading-8">
-           A fejlesztés során fontos szempont volt, hogy korszerű, iparágban is használt technológiákat alkalmazzunk, mint a React, a Tailwind CSS, a NestJS és a Prisma. Emellett a projekt során TypeScript, Vite, Axios, React Router, valamint JWT-alapú hitelesítés és argon2 jelszókezelés is alkalmazásra került. Az adatkezelést MySQL adatbázis biztosítja, míg a fájlfeltöltést a Multer segíti. Ezek együtt stabil, skálázható alapot biztosítanak, miközben lehetővé teszik egy gyors, intuitív és felhasználóbarát élmény kialakítását.
+            A fejlesztés során fontos szempont volt, hogy korszerű, iparágban is használt technológiákat alkalmazzunk, mint a React, a Tailwind CSS, a NestJS és a Prisma. Emellett a projekt során TypeScript, Vite, Axios, React Router, valamint JWT-alapú hitelesítés és argon2 jelszókezelés is alkalmazásra került. Az adatkezelést MySQL adatbázis biztosítja, míg a fájlfeltöltést a Multer segíti. Ezek együtt stabil, skálázható alapot biztosítanak, miközben lehetővé teszik egy gyors, intuitív és felhasználóbarát élmény kialakítását.
           </p>
         </div>
 
