@@ -103,6 +103,7 @@ export default function Transactions() {
                     src={`${API_BASE_URL}${transaction.product.image_url}`}
                     alt={transaction.product.title}
                     className="w-full h-56 object-cover"
+                     style={{ userSelect: "none" }}
                   />
 
                   <div className="p-5">
@@ -132,7 +133,7 @@ export default function Transactions() {
 
                     {transaction.delivered_confirmed ? (
                       <div className="mt-4">
-                        <span className="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-sm">
+                        <span className="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-sm"  style={{ userSelect: "none" }}>
                           Átvétel visszaigazolva
                         </span>
 
@@ -147,7 +148,7 @@ export default function Transactions() {
                       </div>
                     ) : (
                       <div className="mt-4">
-                        <span className="inline-block px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-300 text-sm">
+                        <span className="inline-block px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-300 text-sm" style={{ userSelect: "none" }}>
                           Átvétel visszaigazolására vár
                         </span>
                       </div>
@@ -165,7 +166,7 @@ export default function Transactions() {
                           }
                           onChange={() => handleConfirmDelivery(transaction.id)}
                         />
-                        <span className="text-sm text-white">
+                        <span className="text-sm text-white"  style={{ userSelect: "none" }}>
                           Megérkezett a termék
                         </span>
                       </label>

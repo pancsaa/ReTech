@@ -120,8 +120,7 @@ export default function Products() {
                   key={product.id}
                   className="rounded-3xl bg-white/10 backdrop-blur-sm shadow-xl border border-white/10 overflow-hidden hover:scale-[1.02] transition p-4 h-full flex flex-col"
                 >
-                  {/* KÉP */}
-                  <div className="flex items-center justify-center h-64 mb-4">
+                  <div className="flex items-center justify-center h-64 mb-4"  style={{ userSelect: "none" }}>
                     <img
                       src={`${API_BASE_URL}${product.image_url}`}
                       alt={product.title}
@@ -129,7 +128,6 @@ export default function Products() {
                     />
                   </div>
 
-                  {/* CÍM */}
                   <h2 className="text-white text-2xl font-bold mb-3 px-2">
                     {product.title}
                   </h2>
@@ -161,20 +159,20 @@ export default function Products() {
                   </div>
 
                   <div className="mt-auto flex justify-between items-center gap-3 px-2">
-                    <span className="font-bold text-white bg-teal-500/20 px-4 py-2 rounded-full whitespace-nowrap">
+                    <span className="font-bold text-white bg-teal-500/20 px-4 py-2 rounded-full whitespace-nowrap"  style={{ userSelect: "none" }}>
                       {product.price_recoin} ReCoin
                     </span>
 
                     {isSold ? (
-                      <div className="bg-red-500/20 text-red-300 px-4 py-2 rounded-full font-semibold whitespace-nowrap">
+                      <div className="bg-red-500/20 text-red-300 px-4 py-2 rounded-full font-semibold whitespace-nowrap" style={{ userSelect: "none" }}>
                         Elkelt
                       </div>
                     ) : isOwnProduct ? (
-                      <div className="bg-yellow-500/20 text-yellow-300 px-4 py-2 rounded-full font-semibold whitespace-nowrap">
+                      <div className="bg-yellow-500/20 text-yellow-300 px-4 py-2 rounded-full font-semibold whitespace-nowrap" style={{ userSelect: "none" }}>
                         Saját hirdetés
                       </div>
                     ) : !hasEnoughRecoin ? (
-                      <div className="bg-red-500/20 text-red-300 px-4 py-2 rounded-full font-semibold whitespace-nowrap">
+                      <div className="bg-red-500/20 text-red-300 px-4 py-2 rounded-full font-semibold whitespace-nowrap" style={{ userSelect: "none" }}>
                         Nincs elég ReCoin
                       </div>
                     ) : (

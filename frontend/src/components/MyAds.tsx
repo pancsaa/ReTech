@@ -314,11 +314,13 @@ export default function MyAds() {
               <div
                 key={product.id}
                 className="bg-white/10 backdrop-blur-sm rounded-3xl border border-white/10 overflow-hidden shadow-xl"
+                
               >
                 <img
                   src={`${API_BASE_URL}${product.image_url}`}
                   alt={product.title}
                   className="w-full h-56 object-cover"
+                   style={{ userSelect: "none" }}
                 />
 
                 <div className="p-5">
@@ -329,6 +331,7 @@ export default function MyAds() {
                       className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${getStatusBadgeClass(
                         product.status
                       )}`}
+                       style={{ userSelect: "none" }}
                     >
                       {getStatusLabel(product.status)}
                     </span>
@@ -357,6 +360,7 @@ export default function MyAds() {
                     disabled={deletingId === product.id}
                     className="mt-5 bg-red-500 hover:bg-red-400 disabled:opacity-50 text-white px-4 py-2 rounded-full transition"
                     type="button"
+                    style={{ userSelect: "none" }}
                   >
                     {deletingId === product.id ? "Törlés..." : "Hirdetés törlése"}
                   </button>

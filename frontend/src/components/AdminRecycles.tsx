@@ -139,9 +139,10 @@ export default function AdminRecycles() {
                     src={`${API_BASE_URL}${item.image_url}`}
                     alt={`${item.brand} ${item.model}`}
                     className="w-full h-64 object-cover"
+                     style={{ userSelect: "none" }}
                   />
                 ) : (
-                  <div className="w-full h-64 bg-white/5 flex items-center justify-center text-blue-100/70">
+                  <div className="w-full h-64 bg-white/5 flex items-center justify-center text-blue-100/70" style={{ userSelect: "none" }}>
                     Nincs kép
                   </div>
                 )}
@@ -161,6 +162,7 @@ export default function AdminRecycles() {
                       className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(
                         item.status
                       )}`}
+                       style={{ userSelect: "none" }}
                     >
                       {getStatusLabel(item.status)}
                     </span>
@@ -199,6 +201,7 @@ export default function AdminRecycles() {
                         disabled={actionLoadingId === item.id}
                         className="bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white px-5 py-2 rounded-full font-semibold transition"
                         type="button"
+                         style={{ userSelect: "none" }}
                       >
                         {actionLoadingId === item.id ? "Folyamatban..." : "Elfogadás"}
                       </button>
@@ -208,6 +211,7 @@ export default function AdminRecycles() {
                         disabled={actionLoadingId === item.id}
                         className="bg-red-500 hover:bg-red-400 disabled:opacity-50 text-white px-5 py-2 rounded-full font-semibold transition"
                         type="button"
+                         style={{ userSelect: "none" }}
                       >
                         {actionLoadingId === item.id ? "Folyamatban..." : "Elutasítás"}
                       </button>

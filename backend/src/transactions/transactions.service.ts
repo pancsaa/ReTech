@@ -15,27 +15,21 @@ export class TransactionsService {
     const product = await this.prisma.product.findUnique({
       where: { id: dto.product_id },
     });
-
     if (!product) {
       throw new NotFoundException('A termék nem található.');
     }
-
     if (product.status !== 'AVAILABLE') {
       throw new BadRequestException('Ez a termék nem megvásárolható.');
     }
-
     if (product.seller_id === userId) {
       throw new BadRequestException('A saját termékedet nem veheted meg.');
     }
-
     const buyer = await this.prisma.user.findUnique({
       where: { id: userId },
     });
-
     if (!buyer) {
       throw new NotFoundException('A vásárló nem található.');
     }
-
     if ((buyer.recoin_balance ?? 0) < product.price_recoin) {
       throw new BadRequestException('Nincs elég ReCoin egyenleg.');
     }

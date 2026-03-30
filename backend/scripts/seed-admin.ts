@@ -13,7 +13,7 @@ async function main() {
   const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@gmail.com';
   const adminPassword = process.env.ADMIN_PASSWORD ?? 'admin123';
 
-  // 🔐 ADMIN - mindig legyen biztosan jó email/jelszó/role
+  // ADMIN
   const adminHash = await argon2.hash(adminPassword);
 
   const adminUser = await prisma.user.upsert({
@@ -33,7 +33,7 @@ async function main() {
 
   console.log('✅ Admin ready:', adminUser.email);
 
-  // 👤 DEMO USER
+  // DEMO USER
   const demoEmail = 'demo@demo.com';
   const demoPassword = '123456';
   const demoHash = await argon2.hash(demoPassword);
@@ -54,7 +54,7 @@ async function main() {
   });
 
   console.log('✅ Demo user ready:', demoUser.email);
-
+  //TELEFON
   const existingPhone = await prisma.product.findFirst({
     where: {
       title: 'Demo iPhone 11',
@@ -77,11 +77,11 @@ async function main() {
       },
     });
 
-    console.log('✅ Demo product mobile created');
+    console.log('Demo mobile created');
   } else {
-    console.log('ℹ️ Demo product mobile already exists');
+    console.log('Demo product mobile already exists');
   }
-
+  //LAPTOP
   const existingLaptop = await prisma.product.findFirst({
     where: {
       title: 'Demo Laptop Dell Inspiron',
@@ -104,10 +104,11 @@ async function main() {
       },
     });
 
-    console.log('✅ Demo laptop created');
+    console.log('Demo laptop created');
   } else {
-    console.log('ℹ️ Demo laptop already exists');
+    console.log('Demo laptop already exists');
   }
+  //EGER
   const existingMouse = await prisma.product.findFirst({
     where: {
       title: 'Demo Mouse Razer Viper',
@@ -130,9 +131,9 @@ async function main() {
       },
     });
 
-    console.log('✅ Demo mouse created');
+    console.log('Demo mouse created');
   } else {
-    console.log('ℹ️ Demo mouse already exists');
+    console.log('Demo mouse already exists');
   }
   await app.close();
 }

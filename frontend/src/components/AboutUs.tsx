@@ -9,7 +9,7 @@ export default function AboutUs() {
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <p className="text-teal-300 uppercase tracking-[0.3em] text-sm font-semibold mb-4">
-              Ismerd meg a ReTech-et
+              Ismerje meg a ReTech-et
             </p>
             <h1 className="text-5xl md:text-6xl font-extrabold leading-tight">
               Ne dobja ki, adjon neki még egy esélyt!
@@ -36,7 +36,6 @@ export default function AboutUs() {
               </button>
             </div>
           </div>
-
 
           <div>
             <img
