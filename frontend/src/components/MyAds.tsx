@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
-import {getMyProducts,deleteProduct,createProduct,} from "../service/service";
+import { getMyProducts, deleteProduct, createProduct, } from "../service/service";
 import type { Product, CreateProductPayload } from "../types/types";
 
 const API_BASE_URL = "http://localhost:3000";
@@ -12,7 +12,7 @@ const initialForm: CreateProductPayload = {
   category: "",
   brand: "",
   model: "",
-  price_recoin: 0,
+  price_recoin: 1,
 };
 
 export default function MyAds() {
@@ -223,40 +223,57 @@ export default function MyAds() {
 
               <div>
                 <label className="block text-sm mb-2 text-blue-100">Állapot</label>
-                <input
-                  type="text"
+                <select
                   name="condition"
                   value={form.condition}
                   onChange={handleChange}
                   required
-                  placeholder="Pl. Újszerű"
-                  className="w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3"
-                />
+                  className="w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3 text-white"
+                >
+                  <option value="" className="text-black">Válassz állapotot</option>
+                  <option value="Új" className="text-black">Új</option>
+                  <option value="Újszerű" className="text-black">Újszerű</option>
+                  <option value="Használt" className="text-black">Jó</option>
+                  <option value="Használt" className="text-black">Közepes</option>
+                </select>
+
               </div>
 
               <div>
                 <label className="block text-sm mb-2 text-blue-100">Kategória</label>
-                <input
-                  type="text"
+                <select
                   name="category"
                   value={form.category}
                   onChange={handleChange}
                   required
-                  placeholder="Pl. Telefon"
-                  className="w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3"
-                />
+                  className="w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3 text-white"
+                >
+                  <option value="" className="text-black">Válassz kategóriát</option>
+                  <option value="Telefon" className="text-black">Telefon</option>
+                  <option value="Laptop" className="text-black">Laptop</option>
+                  <option value="Tablet" className="text-black">Tablet</option>
+                  <option value="Elektronikai kiegészítő" className="text-black">
+                    Elektronikai kiegészítő
+                  </option>
+                </select>
               </div>
 
               <div className="md:col-span-2">
                 <label className="block text-sm mb-2 text-blue-100">Leírás</label>
+
                 <textarea
                   name="description"
                   value={form.description}
                   onChange={handleChange}
                   required
                   rows={4}
+                  placeholder="Pl.: iPhone 11, jó állapotban, kisebb karcokkal, töltővel együtt"
                   className="w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3"
                 />
+
+                <p className="text-xs text-blue-100/60 mt-1">
+                  Minimum 10 szó megadása ajánlott a sikeres eladáshoz.
+                </p>
               </div>
 
               <div className="md:col-span-2">
@@ -297,11 +314,13 @@ export default function MyAds() {
               <div
                 key={product.id}
                 className="bg-white/10 backdrop-blur-sm rounded-3xl border border-white/10 overflow-hidden shadow-xl"
+                
               >
                 <img
                   src={`${API_BASE_URL}${product.image_url}`}
                   alt={product.title}
                   className="w-full h-56 object-cover"
+                   style={{ userSelect: "none" }}
                 />
 
                 <div className="p-5">
@@ -312,6 +331,7 @@ export default function MyAds() {
                       className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${getStatusBadgeClass(
                         product.status
                       )}`}
+                       style={{ userSelect: "none" }}
                     >
                       {getStatusLabel(product.status)}
                     </span>
@@ -340,6 +360,7 @@ export default function MyAds() {
                     disabled={deletingId === product.id}
                     className="mt-5 bg-red-500 hover:bg-red-400 disabled:opacity-50 text-white px-4 py-2 rounded-full transition"
                     type="button"
+                    style={{ userSelect: "none" }}
                   >
                     {deletingId === product.id ? "Törlés..." : "Hirdetés törlése"}
                   </button>

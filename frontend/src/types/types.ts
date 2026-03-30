@@ -92,6 +92,10 @@ export interface TransactionItem {
   amount: number;
   transaction_date: string;
   shipping_address?: string;
+
+  delivered_confirmed: boolean;
+  delivered_at?: string | null;
+
   product: {
     id: number;
     title: string;
@@ -99,6 +103,7 @@ export interface TransactionItem {
     price_recoin: number;
     seller_id?: number;
   };
+
   buyer?: {
     id: number;
     username: string;

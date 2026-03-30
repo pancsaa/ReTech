@@ -10,7 +10,6 @@ const productTypes = [
   { value: "PHONE", label: "Telefon" },
   { value: "LAPTOP", label: "Laptop" },
   { value: "TABLET", label: "Tablet" },
-  { value: "CONSOLE", label: "Konzol" },
   { value: "OTHER", label: "Egyéb" },
 ];
 
@@ -19,7 +18,7 @@ const conditions = [
   { value: "LIKE_NEW", label: "Újszerű" },
   { value: "GOOD", label: "Jó" },
   { value: "FAIR", label: "Közepes" },
-  { value: "POOR", label: "Gyenge" },
+  { value: "POOR", label: "Rossz" },
 ];
 
 export default function MyRecycles() {
@@ -135,24 +134,18 @@ export default function MyRecycles() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0b1026] via-[#1b1f4b] to-[#3b1d5c] text-white px-6 py-12">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8">
-
-        {/* FORM */}
         <div className="bg-white/10 border border-white/10 rounded-3xl p-8 backdrop-blur-sm">
           <p className="text-teal-300 uppercase tracking-[0.3em] text-sm font-semibold">
             Újrahasznosítás
           </p>
-
-          <h1 className="text-3xl font-bold mt-2 mb-6">
+          <h1 className="text-3xl font-bold mt-2 mb-6" >
             Új újrahasznosítási kérelem
           </h1>
-
           <form onSubmit={handleSubmit} className="space-y-5">
-
             <div>
               <label className="block text-sm mb-2 text-blue-100">
                 Terméktípus
               </label>
-
               <select
                 name="product_type"
                 value={form.product_type}
@@ -175,7 +168,6 @@ export default function MyRecycles() {
               <label className="block text-sm mb-2 text-blue-100">
                 Állapot
               </label>
-
               <select
                 name="condition"
                 value={form.condition}
@@ -258,6 +250,7 @@ export default function MyRecycles() {
               type="submit"
               disabled={submitting}
               className="bg-teal-500 hover:bg-teal-400 disabled:opacity-50 text-white px-6 py-3 rounded-full font-semibold transition"
+               style={{ userSelect: "none" }}
             >
               {submitting ? "Folyamatban..." : "Kérelem beküldése"}
             </button>
@@ -265,7 +258,6 @@ export default function MyRecycles() {
           </form>
         </div>
 
-        {/* LIST */}
         <div>
 
           <div className="mb-6">
@@ -297,9 +289,11 @@ export default function MyRecycles() {
                       src={`${API_BASE_URL}${item.image_url}`}
                       alt=""
                       className="w-full h-56 object-cover"
+                       style={{ userSelect: "none" }}
                     />
                   ) : (
-                    <div className="w-full h-56 bg-white/5 flex items-center justify-center">
+                    <div className="w-full h-56 bg-white/5 flex items-center justify-center"
+                    style={{ userSelect: "none" }}>
                       Nincs kép
                     </div>
                   )}
@@ -316,6 +310,7 @@ export default function MyRecycles() {
                         className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(
                           item.status
                         )}`}
+                         style={{ userSelect: "none" }}
                       >
                         {getStatusLabel(item.status)}
                       </span>
@@ -326,10 +321,9 @@ export default function MyRecycles() {
                       {item.description}
                     </p>
 
-                    {/* APPROVED MESSAGE */}
                     {item.status === "APPROVED" && (
-                      <div className="mt-4 rounded-2xl bg-green-500/10 border border-green-400/30 p-4">
-                        <p className="text-sm text-green-100 leading-6">
+                      <div className="mt-4 rounded-2xl bg-green-500/10 border border-green-400/30 p-4" >
+                        <p className="text-sm text-green-100 leading-6"  style={{ userSelect: "none" }}>
                           <span className="font-semibold text-white">
                             Teendő:
                           </span>{" "}
@@ -347,16 +341,14 @@ export default function MyRecycles() {
                       </div>
                     )}
 
-                    {/* REJECTED MESSAGE */}
                     {item.status === "REJECTED" && (
-                      <div className="mt-4 rounded-2xl bg-red-500/10 border border-red-400/30 p-4">
+                      <div className="mt-4 rounded-2xl bg-red-500/10 border border-red-400/30 p-4" style={{ userSelect: "none" }}>
                         <p className="text-sm text-red-200">
                           Az admin elutasította ezt az újrahasznosítási kérelmet.
                         </p>
                       </div>
                     )}
 
-                    {/* PENDING MESSAGE */}
                     {item.status === "PENDING" && (
                       <div className="mt-4 rounded-2xl bg-yellow-500/10 border border-yellow-400/30 p-4">
                         <p className="text-sm text-yellow-200">
@@ -369,18 +361,12 @@ export default function MyRecycles() {
                       Létrehozva:{" "}
                       {new Date(item.date).toLocaleString("hu-HU")}
                     </p>
-
                   </div>
-
                 </div>
-
               ))}
-
             </div>
           )}
-
         </div>
-
       </div>
     </div>
   );

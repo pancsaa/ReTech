@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-import {getAdminProducts,approveProductAdmin,rejectProductAdmin,} from "../service/service";
+import { getAdminProducts, approveProductAdmin, rejectProductAdmin, } from "../service/service";
 import type { Product } from "../types/types";
 
 const API_BASE_URL = "http://localhost:3000";
@@ -112,11 +112,10 @@ export default function AdminProducts() {
               <button
                 key={status}
                 onClick={() => setActiveStatus(status)}
-                className={`px-4 py-2 rounded-full border transition ${
-                  activeStatus === status
-                    ? "bg-teal-500 text-white border-teal-400"
-                    : "bg-white/5 border-white/10 text-blue-100 hover:bg-white/10"
-                }`}
+                className={`px-4 py-2 rounded-full border transition ${activeStatus === status
+                  ? "bg-teal-500 text-white border-teal-400"
+                  : "bg-white/5 border-white/10 text-blue-100 hover:bg-white/10"
+                  }`}
                 type="button"
               >
                 {getStatusLabel(status)}
@@ -144,6 +143,7 @@ export default function AdminProducts() {
                   src={`${API_BASE_URL}${item.image_url}`}
                   alt={item.title}
                   className="w-full h-64 object-cover"
+                   style={{ userSelect: "none" }}
                 />
 
                 <div className="p-6">
@@ -159,6 +159,7 @@ export default function AdminProducts() {
                       className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(
                         item.status as FilterStatus
                       )}`}
+                       style={{ userSelect: "none" }}
                     >
                       {getStatusLabel(item.status as FilterStatus)}
                     </span>
@@ -181,6 +182,7 @@ export default function AdminProducts() {
                         disabled={actionLoadingId === item.id}
                         className="bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white px-5 py-2 rounded-full font-semibold transition"
                         type="button"
+                        style={{ userSelect: "none" }}
                       >
                         {actionLoadingId === item.id ? "Folyamatban..." : "Elfogadás"}
                       </button>
@@ -190,6 +192,7 @@ export default function AdminProducts() {
                         disabled={actionLoadingId === item.id}
                         className="bg-red-500 hover:bg-red-400 disabled:opacity-50 text-white px-5 py-2 rounded-full font-semibold transition"
                         type="button"
+                        style={{ userSelect: "none" }}
                       >
                         {actionLoadingId === item.id ? "Folyamatban..." : "Elutasítás"}
                       </button>

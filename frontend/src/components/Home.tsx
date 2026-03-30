@@ -104,8 +104,7 @@ export default function Home() {
             </p>
 
             <p className="text-lg sm:text-xl md:text-2xl text-blue-100/90 max-w-4xl leading-relaxed">
-              Környezetbarát és emberközpontú rendszert építünk, ahol az elektronikai cikkek
-              nem a szeméttelepen végzik, hanem új gazdánál kapnak második esélyt.
+              Környezetbarát és közösségközpontú platformot építünk, ahol az elektronikai eszközök nem hulladékká válnak, hanem új gazdánál kapnak második esélyt.
             </p>
 
             <div className="flex gap-4 flex-wrap justify-center mt-6">
@@ -150,22 +149,24 @@ export default function Home() {
                 return (
                   <div
                     key={product.id}
-                    className="card rounded-3xl bg-white/10 backdrop-blur-sm shadow-xl border border-white/10 overflow-hidden hover:scale-[1.02] transition"
+                    className="card rounded-3xl bg-white/10 backdrop-blur-sm shadow-xl border border-white/10 overflow-hidden hover:scale-[1.02] transition p-2"
                   >
-                    <figure>
+                    <figure className="flex items-center justify-center px-4 pt-4 pb-2 h-60"
+                     style={{ userSelect: "none" }}
+                     >
                       <img
                         src={`${API_BASE_URL}${product.image_url}`}
                         alt={product.title}
-                        className="h-60 w-full object-cover"
+                        className="max-h-full max-w-full object-contain rounded-2xl"
                       />
                     </figure>
 
-                    <div className="card-body flex flex-col justify-between">
-                      <h2 className="card-title text-white text-xl">
+                    <div className="card-body px-4 pb-4 pt-2 flex flex-col justify-between">
+                      <h2 className="card-title text-white text-xl mb-2">
                         {product.title}
                       </h2>
 
-                      <div className="flex flex-wrap gap-2 mt-3 text-sm">
+                      <div className="flex flex-wrap gap-2 mt-2 text-sm min-h-[80px] content-start">
                         <span className="bg-white/10 px-3 py-1 rounded-full text-white/80">
                           {product.brand}
                         </span>
@@ -187,17 +188,22 @@ export default function Home() {
                         </span>
                       </div>
 
-                      <div className="flex justify-between items-center mt-5 gap-3">
-                        <span className=" font-bold text-white bg-teal-500/20 px-4 py-2 rounded-full font-semibold">
+                      <div className="flex justify-between items-center mt-3 gap-3">
+                        <span className="font-bold text-white bg-teal-500/20 px-4 py-2 rounded-full"
+                        style={{ userSelect: "none" }}
+                        >
                           {product.price_recoin} Recoin
                         </span>
 
                         {isSold ? (
-                          <div className="bg-red-500/20 text-red-300 px-4 py-2 rounded-full font-semibold">
+                          <div className="bg-red-500/20 text-red-300 px-4 py-2 rounded-full font-semibold"
+                          style={{ userSelect: "none" }}>
                             Elkelt
                           </div>
                         ) : isOwnProduct ? (
-                          <div className="bg-yellow-500/20 text-yellow-300 px-4 py-2 rounded-full font-semibold">
+                          <div className="bg-yellow-500/20 text-yellow-300 px-4 py-2 rounded-full font-semibold"
+                           style={{ userSelect: "none" }}
+                           >
                             Saját hirdetés
                           </div>
                         ) : !isAuthenticated ? (
@@ -205,11 +211,13 @@ export default function Home() {
                             onClick={() => navigate("/login")}
                             type="button"
                             className="bg-teal-500 hover:bg-teal-400 text-white px-4 py-2 rounded-full font-semibold transition"
+                            style={{ userSelect: "none" }}
                           >
                             Megveszem
                           </button>
                         ) : !hasEnoughRecoin ? (
-                          <div className="bg-red-500/20 text-red-300 px-4 py-2 rounded-full font-semibold">
+                          <div className="bg-red-500/20 text-red-300 px-4 py-2 rounded-full font-semibold"
+                           style={{ userSelect: "none" }}>
                             Nincs elég ReCoin
                           </div>
                         ) : (
@@ -234,7 +242,7 @@ export default function Home() {
 
       <div className="bg-black/20 backdrop-blur-sm py-10 text-center text-blue-5aa00 border-t border-white/10">
         <p className="text-lg md:text-xl font-medium flex items-center justify-center gap-3">
-          ♻️ Kevesebb hulladék • Több újrakezdés • Fenntarthatóbb elektronika
+          ♻️ • Kevesebb hulladék • Több esély • Környezetbarát megoldás ♻️
         </p>
       </div>
 

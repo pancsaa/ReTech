@@ -1,9 +1,5 @@
 import axios from "axios";
-import type {
-  PostUsers,
-  CreateProductPayload,
-  CreateRecyclePayload,
-} from "../types/types";
+import type {PostUsers,CreateProductPayload,CreateRecyclePayload,} from "../types/types";
 
 const api = axios.create({
   baseURL: "http://localhost:3000/api",
@@ -29,6 +25,27 @@ export async function postUser(data: PostUsers, imageFile?: File): Promise<any> 
     return response.data;
   } catch (error) {
     console.error("Regisztrációs hiba:", error);
+    throw error;
+  }
+}
+export async function confirmDelivery(
+  transactionId: number,
+  token: string
+): Promise<any> {
+  try {
+    const response = await api.patch(
+      `/transactions/${transactionId}/confirm-delivery`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Átvétel visszaigazolási hiba:", error);
     throw error;
   }
 }

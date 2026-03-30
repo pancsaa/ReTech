@@ -13,62 +13,58 @@ async function main() {
   const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@gmail.com';
   const adminPassword = process.env.ADMIN_PASSWORD ?? 'admin123';
 
-  // 🔐 ADMIN
-  const existingAdmin = await prisma.user.findUnique({
+  // ADMIN
+  const adminHash = await argon2.hash(adminPassword);
+
+  const adminUser = await prisma.user.upsert({
     where: { email: adminEmail },
-  });
-
-  if (!existingAdmin) {
-    const hash = await argon2.hash(adminPassword);
-
-    await prisma.user.create({
-      data: {
-        email: adminEmail,
-        username: 'admin',
-        password: hash,
-        role: 'ADMIN',
-        recoin_balance: 1000,
-      },
-    });
-
-    console.log('✅ Admin created:', adminEmail);
-  } else {
-    console.log('ℹ️ Admin already exists:', adminEmail);
-  }
-
-  // 👤 DEMO USER
-  const demoEmail = 'demo@demo.com';
-
-  let demoUser = await prisma.user.findUnique({
-    where: { email: demoEmail },
-  });
-
-  if (!demoUser) {
-    const hash = await argon2.hash('123456');
-
-    demoUser = await prisma.user.create({
-      data: {
-        email: demoEmail,
-        username: 'DemoUser',
-        password: hash,
-        recoin_balance: 1000,
-      },
-    });
-
-    console.log('✅ Demo user created');
-  }
-
-  // 📦 DEMO PRODUCT (csak ha nincs még)
-  const existingProduct = await prisma.product.findFirst({
-    where: {
-      title: 'iPhone 11',
+    update: {
+      username: 'admin',
+      password: adminHash,
+      role: 'ADMIN',
+    },
+    create: {
+      email: adminEmail,
+      username: 'admin',
+      password: adminHash,
+      role: 'ADMIN',
     },
   });
 
-  if (!existingProduct) {
+  console.log('✅ Admin ready:', adminUser.email);
+
+  // DEMO USER
+  const demoEmail = 'demo@demo.com';
+  const demoPassword = '123456';
+  const demoHash = await argon2.hash(demoPassword);
+
+  const demoUser = await prisma.user.upsert({
+    where: { email: demoEmail },
+    update: {
+      username: 'DemoUser',
+      password: demoHash,
+      recoin_balance: 1000,
+    },
+    create: {
+      email: demoEmail,
+      username: 'DemoUser',
+      password: demoHash,
+      recoin_balance: 1000,
+    },
+  });
+
+  console.log('✅ Demo user ready:', demoUser.email);
+  //TELEFON
+  const existingPhone = await prisma.product.findFirst({
+    where: {
+      title: 'Demo iPhone 11',
+    },
+  });
+
+  if (!existingPhone) {
     await prisma.product.create({
       data: {
-        title: 'Demo iPhone 11',
+        title: 'iPhone 11',
         description: 'Ez egy minta hirdetés, amit azonnal megvehetsz.',
         condition: 'Használt',
         category: 'Telefon',
@@ -76,46 +72,71 @@ async function main() {
         model: 'iPhone 11',
         price_recoin: 200,
         image_url: '/uploads/products/minta.telefon.jpg',
-        seller_id: demoUser!.id,
+        seller_id: demoUser.id,
         status: 'AVAILABLE',
       },
     });
 
-    console.log('✅ Demo product mobile');
+    console.log('Demo mobile created');
   } else {
-    console.log('ℹ️ Demo product mobile already exists');
+    console.log('Demo product mobile already exists');
   }
-
+  //LAPTOP
   const existingLaptop = await prisma.product.findFirst({
-  where: {
-    title: 'Demo Laptop Dell Inspiron',
-  },
-});
-
-if (!existingLaptop) {
-  await prisma.product.create({
-    data: {
+    where: {
       title: 'Demo Laptop Dell Inspiron',
-      description: 'Megkímélt állapotú laptop, tökéletes tanulásra és munkára.',
-      condition: 'Új',
-      category: 'Laptop',
-      brand: 'Dell',
-      model: 'Inspiron 15',
-      price_recoin: 500,
-      image_url: '/uploads/products/minta.laptop.jpg',
-      seller_id: demoUser!.id,
-      status: 'AVAILABLE',
     },
   });
 
-  console.log('💻 Demo laptop created');
-} else {
-  console.log('ℹ️ Demo laptop already exists');
-}
+  if (!existingLaptop) {
+    await prisma.product.create({
+      data: {
+        title: 'Laptop Dell Inspiron',
+        description: 'Megkímélt állapotú laptop, tökéletes tanulásra és munkára.',
+        condition: 'Új',
+        category: 'Laptop',
+        brand: 'Dell',
+        model: 'Inspiron 15',
+        price_recoin: 400,
+        image_url: '/uploads/products/minta.laptop.jpg',
+        seller_id: demoUser.id,
+        status: 'AVAILABLE',
+      },
+    });
 
+    console.log('Demo laptop created');
+  } else {
+    console.log('Demo laptop already exists');
+  }
+  //EGER
+  const existingMouse = await prisma.product.findFirst({
+    where: {
+      title: 'Demo Mouse Razer Viper',
+    },
+  });
+
+  if (!existingMouse) {
+    await prisma.product.create({
+      data: {
+        title: 'Mouse Razer Viper',
+        description: 'Megkímélt állapotú egér, tökéletes játékra és munkára.',
+        condition: 'Újszerű',
+        category: 'Egér',
+        brand: 'Razer',
+        model: 'Razer Viper',
+        price_recoin: 150,
+        image_url: '/uploads/products/minta.eger.jpg',
+        seller_id: demoUser.id,
+        status: 'AVAILABLE',
+      },
+    });
+
+    console.log('Demo mouse created');
+  } else {
+    console.log('Demo mouse already exists');
+  }
   await app.close();
 }
-
 
 main().catch((e) => {
   console.error(e);

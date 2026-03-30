@@ -71,7 +71,9 @@ export default function Products() {
       await refreshUser();
 
       setProducts((prev) =>
-        prev.map((p) => (p.id === selectedProduct.id ? { ...p, status: "SOLD" } : p))
+        prev.map((p) =>
+          p.id === selectedProduct.id ? { ...p, status: "SOLD" } : p
+        )
       );
 
       setSelectedProduct(null);
@@ -80,7 +82,9 @@ export default function Products() {
       alert("Sikeres vásárlás!");
     } catch (error: any) {
       console.error("Vásárlási hiba:", error);
-      alert(error?.response?.data?.message || "Nem sikerült megvenni a terméket.");
+      alert(
+        error?.response?.data?.message || "Nem sikerült megvenni a terméket."
+      );
     } finally {
       setBuyingId(null);
     }
@@ -104,56 +108,83 @@ export default function Products() {
             Jelenleg nincs elérhető termék.
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {products.map((product) => {
               const isOwnProduct = product.seller_id === user?.userid;
               const isSold = product.status === "SOLD";
-              const hasEnoughRecoin = (user?.recoin_balance ?? 0) >= product.price_recoin;
+              const hasEnoughRecoin =
+                (user?.recoin_balance ?? 0) >= product.price_recoin;
 
               return (
                 <div
                   key={product.id}
-                  className="bg-white/10 backdrop-blur-sm rounded-3xl border border-white/10 overflow-hidden shadow-xl"
+                  className="rounded-3xl bg-white/10 backdrop-blur-sm shadow-xl border border-white/10 overflow-hidden hover:scale-[1.02] transition p-4 h-full flex flex-col"
                 >
-                  <img
-                    src={`${API_BASE_URL}${product.image_url}`}
-                    alt={product.title}
-                    className="w-full h-56 object-cover"
-                  />
+                  <div className="flex items-center justify-center h-64 mb-4"  style={{ userSelect: "none" }}>
+                    <img
+                      src={`${API_BASE_URL}${product.image_url}`}
+                      alt={product.title}
+                      className="max-h-full max-w-full object-contain rounded-2xl"
+                    />
+                  </div>
 
-                  <div className="p-5">
-                    <h3 className="text-xl font-bold">{product.title}</h3>
+                  <h2 className="text-white text-2xl font-bold mb-3 px-2">
+                    {product.title}
+                  </h2>
 
-                    <p className="text-blue-100/80 mt-2">{product.description}</p>
+                  <p className="text-blue-100/80 px-2 mb-4 min-h-[56px]">
+                    {product.description}
+                  </p>
 
-                    <p className="mt-3 text-sm text-teal-300">
-                      {product.brand} • {product.model}
-                    </p>
+                  <div className="flex flex-wrap gap-2 px-2 mb-4 min-h-[72px] content-start">
+                    <span className="bg-white/10 px-3 py-1 rounded-full text-white/80 text-sm">
+                      {product.brand}
+                    </span>
 
-                    <p className="mt-2 font-semibold">
+                    <span className="bg-white/10 px-3 py-1 rounded-full text-white/80 text-sm">
+                      {product.model}
+                    </span>
+
+                    <span className="bg-white/10 px-3 py-1 rounded-full text-white/80 text-sm">
+                      {product.condition}
+                    </span>
+
+                    <span className="bg-white/10 px-3 py-1 rounded-full text-white/80 text-sm">
+                      {product.category}
+                    </span>
+
+                    <span className="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-sm">
+                      Ellenőrzött
+                    </span>
+                  </div>
+
+                  <div className="mt-auto flex justify-between items-center gap-3 px-2">
+                    <span className="font-bold text-white bg-teal-500/20 px-4 py-2 rounded-full whitespace-nowrap"  style={{ userSelect: "none" }}>
                       {product.price_recoin} ReCoin
-                    </p>
+                    </span>
 
                     {isSold ? (
-                      <div className="mt-4 inline-block px-4 py-2 rounded-full bg-red-500/20 text-red-300 font-semibold">
+                      <div className="bg-red-500/20 text-red-300 px-4 py-2 rounded-full font-semibold whitespace-nowrap" style={{ userSelect: "none" }}>
                         Elkelt
                       </div>
                     ) : isOwnProduct ? (
-                      <div className="mt-4 inline-block px-4 py-2 rounded-full bg-yellow-500/20 text-yellow-300 font-semibold">
+                      <div className="bg-yellow-500/20 text-yellow-300 px-4 py-2 rounded-full font-semibold whitespace-nowrap" style={{ userSelect: "none" }}>
                         Saját hirdetés
                       </div>
                     ) : !hasEnoughRecoin ? (
-                      <div className="mt-4 inline-block px-4 py-2 rounded-full bg-red-500/20 text-red-300 font-semibold">
+                      <div className="bg-red-500/20 text-red-300 px-4 py-2 rounded-full font-semibold whitespace-nowrap" style={{ userSelect: "none" }}>
                         Nincs elég ReCoin
                       </div>
                     ) : (
                       <button
                         onClick={() => handleBuy(product)}
                         disabled={buyingId === product.id}
-                        className="mt-4 bg-teal-500 hover:bg-teal-400 disabled:opacity-50 text-white px-4 py-2 rounded-full"
                         type="button"
+                        className="bg-teal-500 hover:bg-teal-400 disabled:opacity-50 text-white px-4 py-2 rounded-full font-semibold transition whitespace-nowrap"
                       >
-                        {buyingId === product.id ? "Folyamatban..." : "Megveszem"}
+                        {buyingId === product.id
+                          ? "Folyamatban..."
+                          : "Megveszem"}
                       </button>
                     )}
                   </div>
@@ -167,7 +198,9 @@ export default function Products() {
       {selectedProduct && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center px-4">
           <div className="w-full max-w-lg rounded-3xl border border-white/10 bg-[#141b3a] p-6 shadow-2xl">
-            <h2 className="text-2xl font-bold mb-2">Szállítási cím megadása</h2>
+            <h2 className="text-2xl font-bold mb-2">
+              Szállítási cím megadása
+            </h2>
 
             <p className="text-blue-100/80 mb-5">
               Add meg a szállítási címet a vásárláshoz.
@@ -203,7 +236,9 @@ export default function Products() {
                 className="px-4 py-2 rounded-full bg-teal-500 hover:bg-teal-400 disabled:opacity-50"
                 type="button"
               >
-                {buyingId === selectedProduct.id ? "Folyamatban..." : "Véglegesítés"}
+                {buyingId === selectedProduct.id
+                  ? "Folyamatban..."
+                  : "Véglegesítés"}
               </button>
             </div>
           </div>

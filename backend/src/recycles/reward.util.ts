@@ -12,7 +12,6 @@ const baseRewardByType: Record<string, number> = {
   PHONE: 80,
   LAPTOP: 150,
   TABLET: 110,
-  CONSOLE: 120,
   OTHER: 60,
 };
 
