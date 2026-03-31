@@ -1,0 +1,50 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: ReTech
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: retech_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql:/docker-entrypoint-initdb.d
+
+  backend:
+    build:
+      context: ./backend
+    container_name: retech-backend
+    restart: unless-stopped
+    depends_on:
+      - db
+    working_dir: /app
+    environment:
+      DATABASE_URL: mysql://root:123@db:3306/retech_db
+      PORT: 3000
+      JWT_EXPIRES_IN: 1h
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: sh -c "npm i && npx prisma generate && npx prisma migrate dev --name init && npx tsx scripts/seed-admin.ts && npm run start"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: retech-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: sh -c "npm i && npm run dev -- --host 0.0.0.0"
+
+volumes:
+  mysql_data:
