@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import type { User, AuthContextType } from "../types/types";
 import { getMe } from "../service/service";
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);

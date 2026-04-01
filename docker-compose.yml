@@ -21,7 +21,7 @@ services:
       - db
     working_dir: /app
     environment:
-      DATABASE_URL: mysql://root:123@db:3306/retech_db
+      DATABASE_URL: mysql://root:123@localhost:3306/retech_db
       PORT: 3000
       JWT_EXPIRES_IN: 1h
     ports:
@@ -29,7 +29,7 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
-    command: sh -c "npm i && npx prisma generate && npx prisma migrate dev --name init && npx tsx scripts/seed-admin.ts && npm run start"
+    command: sh -c "npm i && npx prisma generate && npx prisma migrate dev --name init && npx tsx scripts/seed-admin.ts && npm install dotenv && npm run start"
 
   frontend:
     build:
