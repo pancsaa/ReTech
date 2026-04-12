@@ -5,11 +5,16 @@ import { extname } from 'path';
 
 import { RecyclesService } from './recycles.service';
 import { CreateRecycleDto } from './dto/recycles.dto';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiConsumes } from '@nestjs/swagger';
 
+@ApiTags('Recycles')
+@ApiBearerAuth()
 @Controller('recycles')
 export class RecyclesController {
   constructor(private readonly recyclesService: RecyclesService) {}
 
+  @ApiOperation({ summary: 'Új visszaváltási kérelem beküldése (a kép opcionális)' })
+  @ApiConsumes('multipart/form-data')
   @Post()
   @UseInterceptors(
     FileInterceptor('image', {
@@ -30,6 +35,7 @@ export class RecyclesController {
     return this.recyclesService.create(dto, req.user.id, file);
   }
 
+  @ApiOperation({ summary: 'Saját visszaváltások listája' })
   @Get('me')
   async myRecycles(@Req() req: any) {
     return this.recyclesService.myRecycles(req.user.id);

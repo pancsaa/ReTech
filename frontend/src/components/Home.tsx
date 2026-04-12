@@ -4,7 +4,7 @@ import { getAllProducts, buyProduct } from "../service/service";
 import { useAuth } from "./AuthContext";
 import type { Product } from "../types/types";
 
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "";
 
 export default function Home() {
   const navigate = useNavigate();

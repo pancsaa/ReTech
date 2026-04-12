@@ -3,7 +3,7 @@ import { useAuth } from "./AuthContext";
 import { getMyProducts, deleteProduct, createProduct, } from "../service/service";
 import type { Product, CreateProductPayload } from "../types/types";
 
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "";
 
 const initialForm: CreateProductPayload = {
   title: "",

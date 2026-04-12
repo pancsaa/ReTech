@@ -4,7 +4,7 @@ import { useAuth } from "./AuthContext";
 import { getAdminProducts, approveProductAdmin, rejectProductAdmin, } from "../service/service";
 import type { Product } from "../types/types";
 
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "";
 
 type FilterStatus = "PENDING" | "AVAILABLE" | "REJECTED" | "SOLD";
 

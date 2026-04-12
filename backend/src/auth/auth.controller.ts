@@ -5,11 +5,15 @@ import { extname } from 'path';
 import { AuthService } from './auth.service';
 import { LoginUserDto, RegisterUserDto } from './dto/auth.dto';
 import { Public } from './public.decorator';
+import { ApiTags, ApiOperation,ApiBearerAuth, ApiConsumes } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('authorise')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiOperation({ summary: 'Regisztráció (opcionális profilképpel)' })
+  @ApiConsumes('multipart/form-data')
   @Public()
   @Post('register')
   @UseInterceptors(
@@ -34,12 +38,15 @@ export class AuthController {
     return this.authService.authRegister(dto);
   }
 
+  @ApiOperation({ summary: 'Bejelentkezés, visszaad egy JWT tokent' })
   @Public()
   @Post('login')
   async login(@Body() dto: LoginUserDto) {
     return this.authService.authLogin(dto);
   }
 
+  @ApiOperation({ summary: 'Bejelentkezett felhasználó adatai' })
+  @ApiBearerAuth()
   @Get('me')
   async getMe(@Req() req: any) {
     return this.authService.getMe(req.user.id);

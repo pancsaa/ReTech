@@ -4,7 +4,7 @@ import { useAuth } from "./AuthContext";
 import { confirmDelivery, getMyTransactions } from "../service/service";
 import type { TransactionItem } from "../types/types";
 
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "";
 
 export default function Transactions() {
   const { token, isAuthenticated, isAuthReady, user, refreshUser } = useAuth();

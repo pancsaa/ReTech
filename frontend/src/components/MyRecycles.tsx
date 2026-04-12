@@ -4,7 +4,7 @@ import { useAuth } from "./AuthContext";
 import { createRecycle, getMyRecycles } from "../service/service";
 import type { CreateRecyclePayload, RecycleRequest } from "../types/types";
 
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "";
 
 const productTypes = [
   { value: "PHONE", label: "Telefon" },

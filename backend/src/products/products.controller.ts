@@ -5,6 +5,7 @@ import { ProductsService } from './products.service';
 import { Public } from '../auth/public.decorator';
 import { CreateProductDto } from './dto/products.dto';
 import { randomUUID } from 'crypto';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiConsumes } from '@nestjs/swagger';
 
 function createValidName(imageName: string) {
   return imageName
@@ -12,27 +13,35 @@ function createValidName(imageName: string) {
     .replace(/[^a-zA-Z0-9._-]/g, '');
 }
 
+@ApiTags('Products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) { }
 
+  @ApiOperation({ summary: 'Összes elérhető termék listája' })
   @Public()
   @Get()
   async getAll() {
     return this.productsService.getAll();
   }
 
+  @ApiOperation({ summary: 'Saját termékek listája' })
+  @ApiBearerAuth()
   @Get('me')
   async myProducts(@Req() req: any) {
     return this.productsService.myProducts(req.user.id);
   }
 
+  @ApiOperation({ summary: 'Egy termék lekérése ID alapján' })
   @Public()
   @Get(':id')
   async getOne(@Param('id') id: string) {
     return this.productsService.getOne(Number(id));
   }
 
+  @ApiOperation({ summary: 'Új termék feltöltése képpel' })
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -71,6 +80,8 @@ export class ProductsController {
     });
   }
 
+  @ApiOperation({ summary: 'Termék törlése (SAJÁT vagy ADMIN)' })
+  @ApiBearerAuth()
   @Delete(':id')
   async deleteProduct(
     @Param('id') id: string,

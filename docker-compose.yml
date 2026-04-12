@@ -11,6 +11,12 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./mysql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   backend:
     build:
@@ -18,18 +24,38 @@ services:
     container_name: retech-backend
     restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     working_dir: /app
     environment:
-      DATABASE_URL: mysql://root:123@localhost:3306/retech_db
+      DATABASE_URL: mysql://root:123@db:3306/retech_db
       PORT: 3000
+      JWT_SECRET: super_secret_jwt_key
       JWT_EXPIRES_IN: 1h
     ports:
       - "3000:3000"
     volumes:
       - ./backend:/app
       - /app/node_modules
-    command: sh -c "npm i && npx prisma generate && npx prisma migrate dev --name init && npx tsx scripts/seed-admin.ts && npm install dotenv && npm run start"
+    command: sh -c "npm i && npx prisma generate && npx prisma db push && npx tsx scripts/seed-admin.ts && npm run start"
+
+  prisma-studio:
+    build:
+      context: ./backend
+    container_name: retech-prisma-studio
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    working_dir: /app
+    environment:
+      DATABASE_URL: mysql://root:123@db:3306/retech_db
+    ports:
+      - "5555:5555"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: sh -c "npm i && npx prisma generate && npx prisma studio --port 5555 --browser false"
 
   frontend:
     build:

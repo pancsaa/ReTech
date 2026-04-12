@@ -60,7 +60,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:3000/api/authorise/login', {
+      const res = await axios.post('/api/authorise/login', {
         email: loginForm.email,
         password: loginForm.password,
       });
@@ -95,7 +95,7 @@ export default function Login() {
     }
 
     try {
-      await axios.post('http://localhost:3000/api/authorise/register', formData, {
+      await axios.post('/api/authorise/register', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -160,7 +160,7 @@ export default function Login() {
             {tab === 'register' && (
               <>
                 <div className="flex flex-col items-center mb-2">
-                  <label htmlFor="avatar" className="cursor-pointer group">
+                  <label htmlFor="avatar" className="cursor-pointer group flex flex-col items-center">
                     <div className="w-20 h-20 rounded-full bg-gray-800 border-2 border-gray-700 group-hover:border-indigo-500 transition overflow-hidden">
                       {imagePreview ? (
                         <img
@@ -182,7 +182,7 @@ export default function Login() {
                         </div>
                       )}
                     </div>
-                    <p className="mt-2 text-xs text-gray-400 group-hover:text-indigo-400">
+                    <p className="mt-2 text-xs text-gray-400 group-hover:text-indigo-400 text-center">
                       {imageFile ? imageFile.name : 'Profilkép feltöltése'}
                     </p>
                   </label>

@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import adminProfile from "../assets/admin-profile.jpg";
 
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "";
 
 export default function Navbar() {
   const navigate = useNavigate();
