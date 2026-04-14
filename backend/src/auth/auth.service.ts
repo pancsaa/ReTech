@@ -20,7 +20,7 @@ export class AuthService {
     });
 
     if (exits) {
-      throw new ConflictException('This email adress is already in use!');
+      throw new ConflictException('Ez az email cím már foglalt!');
     }
 
     const hashedPassword = await argon2.hash(user.password);
@@ -56,13 +56,13 @@ export class AuthService {
 
     if (!loginUser) {
       throw new UnauthorizedException(
-        'Wrong email address or wrong password!',
+        'Hibás email cím vagy rossz jelszó!',
       );
     }
 
     const ok = await argon2.verify(loginUser.password, user.password);
     if (!ok) {
-      throw new UnauthorizedException('Wrong password!');
+      throw new UnauthorizedException('Rossz jelszó!');
     }
 
     const { password, ...logUser } = loginUser;
@@ -95,7 +95,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Felhasználó nem található');
     }
     return user;
   }

@@ -174,7 +174,7 @@ export default function Transactions() {
 
                     {isSeller && !transaction.delivered_confirmed && (
                       <p className="mt-4 text-sm text-blue-100/80">
-                        Az eladó ReCoin jóváírása akkor történik meg, ha a vevő
+                        A ReCoin jóváírása akkor történik meg, ha a vevő
                         visszaigazolja az átvételt.
                       </p>
                     )}

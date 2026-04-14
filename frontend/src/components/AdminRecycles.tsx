@@ -29,8 +29,8 @@ export default function AdminRecycles() {
       const data = await getAdminRecycles(token, status);
       setItems(data);
     } catch (error) {
-      console.error("Admin recycle lista hiba:", error);
-      alert("Nem sikerült betölteni a recycle kérelmeket.");
+      console.error("Admin újrahasznosítási lista hiba:", error);
+      alert("Nem sikerült betölteni a újrahasznosítási kérelmeket.");
     } finally {
       setLoading(false);
     }
@@ -103,7 +103,7 @@ export default function AdminRecycles() {
             <p className="text-teal-300 uppercase tracking-[0.3em] text-sm font-semibold">
               Admin panel
             </p>
-            <h1 className="text-4xl font-bold mt-2">Recycle kérelmek</h1>
+            <h1 className="text-4xl font-bold mt-2">Újrahasznosítási kérelmek</h1>
           </div>
 
           <div className="flex gap-2 flex-wrap">
@@ -125,7 +125,7 @@ export default function AdminRecycles() {
 
         {items.length === 0 ? (
           <div className="bg-white/10 border border-white/10 rounded-3xl p-8 text-blue-100">
-            Nincs megjeleníthető recycle kérelem ebben a státuszban.
+            Nincs megjeleníthető újrahasznosítási kérelem ebben a státuszban.
           </div>
         ) : (
           <div className="grid lg:grid-cols-2 gap-6">

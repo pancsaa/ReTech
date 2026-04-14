@@ -9,13 +9,11 @@ async function main() {
   });
 
   const prisma = app.get(PrismaService);
-
   const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@gmail.com';
   const adminPassword = process.env.ADMIN_PASSWORD ?? 'admin123';
 
   // ADMIN
   const adminHash = await argon2.hash(adminPassword);
-
   const adminUser = await prisma.user.upsert({
     where: { email: adminEmail },
     update: {
@@ -31,7 +29,7 @@ async function main() {
     },
   });
 
-  console.log('✅ Admin ready:', adminUser.email);
+  console.log('Admin ready:', adminUser.email);
 
   // DEMO USER
   const demoEmail = 'demo@demo.com';
@@ -53,7 +51,8 @@ async function main() {
     },
   });
 
-  console.log('✅ Demo user ready:', demoUser.email);
+  console.log('Demo user ready:', demoUser.email);
+
   //TELEFON
   const existingPhone = await prisma.product.findFirst({
     where: {
@@ -81,6 +80,7 @@ async function main() {
   } else {
     console.log('Demo product mobile already exists');
   }
+
   //LAPTOP
   const existingLaptop = await prisma.product.findFirst({
     where: {
@@ -108,6 +108,7 @@ async function main() {
   } else {
     console.log('Demo laptop already exists');
   }
+  
   //EGER
   const existingMouse = await prisma.product.findFirst({
     where: {

@@ -6,7 +6,7 @@ import {PrismaMariaDb} from "@prisma/adapter-mariadb"
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy{
     constructor(){
         const url= process.env.DATABASE_URL;
-        if(!url) throw new Error("Missing database_url!");
+        if(!url) throw new Error("Hiányzik az adatbázis url!");
         const adapter=new PrismaMariaDb(url);
         super({adapter})
     }

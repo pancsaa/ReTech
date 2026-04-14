@@ -68,7 +68,6 @@ model Recycle {
   description   String?
   note          String?
   image_url     String?
-
   recoin_reward Int
   status        RecycleStatus @default(PENDING)
   date          DateTime      @default(now())

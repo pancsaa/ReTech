@@ -16,11 +16,11 @@ if (fs.existsSync(examplePath)) {
   content = fs.readFileSync(examplePath, "utf8");
 } else {
   content = `DATABASE_URL="mysql://root:123@localhost:3307/retech_db"
-PORT=3000
-JWT_SECRET="your_super_secret_key_here"
-JWT_EXPIRES_IN="1h"
-ADMIN_EMAIL="admin@gmail.com"
-ADMIN_PASSWORD="admin123"
+  PORT=3000
+  JWT_SECRET="your_super_secret_key_here"
+  JWT_EXPIRES_IN="1h"
+  ADMIN_EMAIL="admin@gmail.com"
+  ADMIN_PASSWORD="admin123"
 `;
 }
 

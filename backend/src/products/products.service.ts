@@ -71,7 +71,7 @@ export class ProductsService {
     });
 
     if (!product) {
-      throw new NotFoundException('Product not found');
+      throw new NotFoundException('A termék nem található');
     }
 
     if (role !== 'ADMIN' && product.seller_id !== userId) {
@@ -107,7 +107,7 @@ export class ProductsService {
     });
 
     if (!product) {
-      throw new NotFoundException('Product not found');
+      throw new NotFoundException('A termék nem található');
     }
 
     if (product.status !== 'PENDING') {
@@ -127,7 +127,7 @@ export class ProductsService {
     });
 
     if (!product) {
-      throw new NotFoundException('Product not found');
+      throw new NotFoundException('A termék nem található');
     }
 
     if (product.status !== 'PENDING') {

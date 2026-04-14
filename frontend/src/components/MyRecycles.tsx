@@ -50,7 +50,7 @@ export default function MyRecycles() {
       const data = await getMyRecycles(token);
       setItems(data);
     } catch (error) {
-      console.error("Recycle lista betöltési hiba:", error);
+      console.error("Újrahasznosítási lista betöltési hiba:", error);
       alert("Nem sikerült betölteni az újrahasznosítási kérelmeket.");
     } finally {
       setLoading(false);
@@ -100,7 +100,7 @@ export default function MyRecycles() {
 
       await loadData();
     } catch (error) {
-      console.error("Recycle létrehozási hiba:", error);
+      console.error("Újrahasznosítási  létrehozási hiba:", error);
       alert("Nem sikerült létrehozni a kérelmet.");
     } finally {
       setSubmitting(false);
